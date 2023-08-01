@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::post('/register', [UsuarioController::class, 'register']);
+
+// Ruta para el inicio de sesión
+//Route::post('/login', [UsuarioController::class, 'login']);
+
+Route::post('login-init', [UsuarioController::class, 'loginInit'])->name('api.login-init');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('loginL', [UsuarioController::class, 'login'])->name('loginL');
+
