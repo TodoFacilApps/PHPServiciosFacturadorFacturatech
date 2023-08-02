@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('Serial')->unsigned();
             $table->integer('Usuario')->nullable();
             $table->integer('Estado')->nullable();
-            $table->primary(['Empresa', 'Serial']);
+            $table->primary(['Empresa','Serial']);
             $table->index('Empresa');
             $table->index('Usuario');
             $table->foreign('Empresa')->references('Empresa')->on('EMPRESA')

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Usuario;
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -18,14 +19,13 @@ class UsuarioController extends Controller
     public function register(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|unique:USUARIO',
-            'password' => 'required|min:6',
+            'email' => 'required|string|email|unique:USUARIO',
+            'password' => 'required|string|confirmed',//password_confirmation
             'Correo' => 'required|email|unique:USUARIO',
             'Nombre' => 'required',
             'Apellido' => 'required',
             'Telefono' => 'nullable|integer',
         ]);
-
 
         // Crear el nuevo usuario
         $user = new Usuario();
@@ -37,12 +37,8 @@ class UsuarioController extends Controller
         $user->Telefono = $credentials['Telefono'];
         $user->save();
 
-        // Generar y devolver el token JWT para el usuario recién registrado
-
-        $token = JWTAuth::fromUser($user);
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'user' => $user
         ], 201);
 
     }
@@ -50,8 +46,8 @@ class UsuarioController extends Controller
     public function signUp(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|unique:USUARIO',
-            'password' => 'required|min:6',
+            'email' => 'required|string|email|unique:USER',
+            'password' => 'required|string|confirmed',
             'Correo' => 'required|email|unique:USUARIO',
             'Nombre' => 'required',
             'Apellido' => 'required',
@@ -71,22 +67,21 @@ class UsuarioController extends Controller
 
         // Generar y devolver el token JWT para el usuario recién registrado
 
-        $token = JWTAuth::fromUser($user);
+        //$token = JWTAuth::fromUser($user);
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'user' => $user //,
+          //  'token' => $token
         ], 201);
     }
 
 
     public function login(Request $request)
     {
-            $request->validate([
+        $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-
         $credentials = request(['email', 'password']);
 
         if (!Auth::attempt($credentials))
@@ -98,24 +93,22 @@ class UsuarioController extends Controller
         $tokenResult = $user->createToken('Personal Access Token');
 
         $token = $tokenResult->token;
-        if ($request->remember_me)
+        if ($request->remember_me){
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }
+
         $token->save();
-/*
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'values'=> $user,
-            'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
-        ]);
-*/
+        $user->api_token = $token->id;
+        $user->save();
+
+
         return response()->json([
             'error' => 0,
             'status' => 1,
             'message'=> "Usuario obtenido",
             'messageMostrar'=> 'se obtubo el usuario',
             'messageSistema'=> 'se obtubo el usuario',
-            'values'=> $user,$token,
+            'values'=> [$tokenResult->accessToken]
         ]);
     }
 
@@ -140,3 +133,10 @@ class UsuarioController extends Controller
         return response()->json($request->user());
     }
 }
+/*
+
+mis facturaws
+productos
+catalogo
+
+*/

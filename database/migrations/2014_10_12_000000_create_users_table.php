@@ -15,15 +15,16 @@ return new class extends Migration
             $table->id('Usuario');
             $table->string('Nombre', 100)->nullable();
             $table->string('Apellido', 100)->nullable();
-            $table->string('email', 100)->nullable();
+            $table->string('email')->unique();
             $table->string('Correo', 150)->nullable();
-            $table->string('password', 190)->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
             $table->integer('Telefono')->nullable();
             $table->integer('Usr')->nullable();
             $table->date('UsrFecha')->nullable();
             $table->string('UsrHora', 12)->nullable();
+            $table->rememberToken();
             $table->unique('Correo');
-            $table->unique('email');
             });
         }
 

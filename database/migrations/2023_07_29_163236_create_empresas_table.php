@@ -53,11 +53,7 @@ return new class extends Migration
             $table->integer('Region')->unsigned();
             $table->string('IpServidor', 20)->nullable();
             $table->string('IpProxy', 20)->nullable();
-
-            $table->primary('Empresa');
             $table->unique('Nombre');
-
-
             $table->index('TipoSoftware');
             $table->index('Ciudad');
             $table->index('TipoEmpresa');

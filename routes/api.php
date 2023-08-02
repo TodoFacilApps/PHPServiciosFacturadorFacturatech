@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PruevaBlogController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\UsuarioEmpresaController;
+use App\Http\Controllers\TokenServicioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,40 +17,25 @@ use App\Http\Controllers\UsuarioEmpresaController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+// Ruta para el inicio de sesión
+//Route::post('login', [UsuarioController::class, 'login']);
 
 
-
-Route::get('/index', function () {
-    return view('auth.registrer');
-});
-Route::get('/vlogin', function () {
-    return view('auth.login');
-});
-Route::get('/empresas', [PruevaBlogController::class, 'ApiIndex'] );
-
+// Rutas públicas (no requieren autenticación)
+Route::post('signup', [UsuarioController::class, 'signup']);
 // Ruta para procesar el registro de usuario
 Route::post('/register', [UsuarioController::class, 'register']);
-
-// Ruta para el inicio de sesión
 Route::post('login', [UsuarioController::class, 'login']);
-Route::post('registrarEmpresa', [UsuarioEmpresaController::class, 'store']);
-Route::post('misEmpresa', [UsuarioEmpresaController::class, 'misEmpresas']);
+Route::get('/empresas', [PruevaBlogController::class, 'ApiIndex'] );
 
-Route::get('logout', [UsuarioController::class, 'logout'])->middleware('auth:api');
-Route::get('user', [UsuarioController::class, 'logout'])->middleware('auth:api');
+// Rutas protegidas (requieren autenticación con el middleware 'auth:api')
+Route::middleware('auth:api')->group(function () {
+    Route::get('logout', [UsuarioController::class, 'logout']);
+    Route::get('user', [UsuarioController::class, 'user']);
 
+    Route::post('registrarEmpresa', [UsuarioEmpresaController::class, 'store']);
+    Route::post('misEmpresa', [UsuarioEmpresaController::class, 'misEmpresas']);
+    Route::post('registerToken', [TokenServicioController::class, 'store']);
+    Route::post('obtenerToken', [TokenServicioController::class, 'show']);
 
-
-Route::group([
-    'prefix' => 'auth'
-], function () {
-    Route::post('login', 'UsuarioController@login');
-    Route::post('signup', 'UsuarioController@signUp');
-
-    Route::group([
-      'middleware' => 'auth:api'
-    ], function() {
-        Route::get('logout', 'UsuarioController@logout');
-        Route::get('user', 'UsuarioController@user');
-    });
 });
