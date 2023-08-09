@@ -118,6 +118,14 @@ class UsuarioController extends Controller
     {
 
         $request->user()->token()->revoke();
+        return response()->json([
+            'error' => 0,
+            'status' => 1,
+            'message'=> "Usuario cerro sesion",
+            'messageMostrar'=> 'Successfully logged out',
+            'messageSistema'=> 'Successfully logged out',
+            'values'=> null
+        ]);
 
         return response()->json([
             'message' => 'Successfully logged out'
@@ -129,6 +137,15 @@ class UsuarioController extends Controller
      */
     public function user(Request $request)
     {
+
+        return response()->json([
+            'error' => 0,
+            'status' => 1,
+            'message'=> "Usuario obtenido",
+            'messageMostrar'=> 'se obtubo el usuario',
+            'messageSistema'=> 'se obtubo el usuario',
+            'values'=> $request->user()
+        ]);
 
         return response()->json($request->user());
     }

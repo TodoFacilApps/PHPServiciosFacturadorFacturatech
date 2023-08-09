@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('FaceBook', 250);
             $table->string('Twitter', 250);
             $table->string('Youtube', 250);
-            $table->string('Eslogan', 120);
+            $table->string('Eslogan', 220);
             $table->string('UrlLogo', 400);
             $table->string('UrlPortada', 400);
             $table->text('Email_TO');

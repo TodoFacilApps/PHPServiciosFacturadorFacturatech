@@ -11,7 +11,9 @@ use App\Models\EMPRESAUSUARIOPERSONAL;
 class UsuarioEmpresaController extends Controller
 {
     //
-
+    /**
+     *
+     */
     public function store(Request $request)
     {
         $credentials = $request->validate([
@@ -45,17 +47,14 @@ class UsuarioEmpresaController extends Controller
         }
 
         $ultimoRegistro = $this->serieAutoIncrement();
-//        return $ultimoRegistro;
-
+        //return $ultimoRegistro;
         $personal = EMPRESAUSUARIOPERSONAL::create([
             'Empresa' => $oEmpresa->Empresa,
             'Serial'=> $ultimoRegistro,
             'Usuario'=> $oUser->Usuario,
             'Estado'=> 1
         ]);
-
         // Generar y devolver el token JWT para el usuario recién registrado
-
         return response()->json([
             'error' => 0,
             'status' => 1,
@@ -67,15 +66,20 @@ class UsuarioEmpresaController extends Controller
 
     }
 
+    /**
+     * mis  empresas
+     */
     public function misEmpresas(Request $request)
     {
+        $oUser = $request->user();
+        /*
         $credentials = $request->validate([
             'Usuario' => 'required',
         ]);
-
+        */
 
         // Crear el nuevo usuario
-        $oUser = Usuario::find($credentials['Usuario']);
+        $oUser = Usuario::find($oUser['Usuario']);
         if(is_null($oUser)){
             return response()->json([
                 'error' => 0,
@@ -88,7 +92,7 @@ class UsuarioEmpresaController extends Controller
         }
 
         $personal = EmpresaUsuarioPersonal::where('Usuario',$oUser->Usuario)->get();
-//        return $personal;
+        //return $personal;
 
         $empresas = Empresa::select('EMPRESA.*')
             ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
@@ -97,7 +101,7 @@ class UsuarioEmpresaController extends Controller
             ->orderBy('EMPRESA.Empresa', 'asc')
             ->get();
 
-  //      return $empresas;
+        //return $empresas;
         // Generar y devolver el token JWT para el usuario recién registrado
 
         return response()->json([
@@ -107,6 +111,54 @@ class UsuarioEmpresaController extends Controller
             'messageMostrar'=> 'Consula exitoso',
             'messageSistema'=> 'Listado de Empresas Personales Ejecutado',
             'values'=> $empresas,
+        ],201);
+
+    }
+    /**
+     * show => metodo que rebuelve una empresa
+     * fecha 04/08/2023
+     */
+    public function show($InEmpresa)
+    {
+        $InUser = auth()->id();
+
+
+        //      return $empresas;
+        // Generar y devolver el token JWT para el usuario recién registrado
+        $empresa = Empresa::find($InEmpresa);
+        if(is_null($empresa)){
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "Dato Invialido",
+                'messageMostrar'=> 'no se encontro a la empresa',
+                'messageSistema'=> 'usuario invalido',
+                'values'=> null,
+            ]);
+        }
+
+
+        $personal = EmpresaUsuarioPersonal::where('Usuario',$InUser)
+        ->where('Empresa',$InEmpresa)
+        ->get();
+        if ($personal->isEmpty()) {
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "Dato Invialido",
+                'messageMostrar'=> 'no se encontro una relacion entre la empresa y el usuario',
+                'messageSistema'=> 'no hay relacion Empresa Usuario',
+                'values'=> null,
+            ]);
+        }
+
+        return response()->json([
+            'error' => 0,
+            'status' => 1,
+            'message'=> "Consulta exitosa",
+            'messageMostrar'=> 'Consula exitoso',
+            'messageSistema'=> 'Listado de Empresas Personales Ejecutado',
+            'values'=> $empresa,
         ],201);
 
     }
