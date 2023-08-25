@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('TOKENSERVICIO', function (Blueprint $table) {
-            $table->id('TokenServicio');
-            $table->text('ApiToken');
-            $table->text('TokenService');
-            $table->text('TokenSecret');
-            $table->text('TokenBearer');
-
+        Schema::create('MONEDA', function (Blueprint $table) {
+            $table->id('Moneda');
+            $table->string('Nombre');
         });
     }
 
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('TOKENSERVICIO');
+        Schema::dropIfExists('MONEDA');
     }
 };

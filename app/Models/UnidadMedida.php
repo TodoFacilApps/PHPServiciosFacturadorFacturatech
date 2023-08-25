@@ -10,12 +10,15 @@ class UnidadMedida extends Model
     use HasFactory;
 
     protected $table = 'UNIDADMEDIDA';
-
     protected $primaryKey = 'UnidadMedida';
     public $timestamps = false;
-
     protected $fillable = [
+        'Codigo',
         'Descripcion',
+        'Abreviatura',
+        'Usr',
+        'UsrFecha',
+        'UsrHora'
     ];
-
+    // Si no deseas utilizar timestamps, agrega la siguiente línea:
 }

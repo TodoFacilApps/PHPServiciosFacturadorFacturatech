@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Usuario;
 use App\Models\Empresa;
-use App\Models\EMPRESAUSUARIOPERSONAL;
+use App\Models\EmpresaUsuarioPersonal;
 
 class UsuarioEmpresaController extends Controller
 {
@@ -48,7 +48,7 @@ class UsuarioEmpresaController extends Controller
 
         $ultimoRegistro = $this->serieAutoIncrement();
         //return $ultimoRegistro;
-        $personal = EMPRESAUSUARIOPERSONAL::create([
+        $personal = EmpresaUsuarioPersonal::create([
             'Empresa' => $oEmpresa->Empresa,
             'Serial'=> $ultimoRegistro,
             'Usuario'=> $oUser->Usuario,

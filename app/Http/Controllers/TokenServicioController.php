@@ -20,6 +20,7 @@ class TokenServicioController extends Controller
     {
         return Crypt::decryptString($data);
     }
+
     public function store(Request $request)
     {
         $oInput = $request->validate([
@@ -45,20 +46,16 @@ class TokenServicioController extends Controller
             'values'=> [$token]
         ]);
     }
+
     public function show(Request $request)
     {
+
         $request->validate([
             'ApiToken' => 'required',
         ]);
-
-        //return $request;
         $oInput = TokenServicio :: where('ApiToken',$request->ApiToken)->first();
 
-        // Decrypt the properties of the model instance
-        $oInput->Service = $this->decryptData($oInput->Service);
-        $oInput->Secret = $this->decryptData($oInput->Secret);
-        $oInput->Bearer = $this->decryptData($oInput->Bearer);
-        return $oInput;
+        $oInput->TokenBearer = $this->decryptData($oInput->TokenBearer);
 
         return response()->json([
             'error' => 0,

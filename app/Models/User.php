@@ -20,7 +20,15 @@ class User extends Authenticatable implements JWTSubject // Added here
     public $timestamps = false;
     protected $hidden = ['password'];
 
-    protected $fillable = ['Nombre', 'Apellido', 'email', 'Correo', 'password', 'Telefono'];
+    protected $fillable = [
+        'Nombre',
+        'Apellido',
+        'email',
+        'Correo',
+        'password',
+        'EmpresaSeleccionada',
+        'Telefono'
+    ];
 
 
     public function getJWTIdentifier()
@@ -31,4 +39,11 @@ class User extends Authenticatable implements JWTSubject // Added here
     {
         return [];
     }
+
+        // Relación con Empresa
+        public function empresa()
+        {
+            return $this->belongsTo(Empresa::class, 'EmpresaSeleccionada', 'Empresa');
+        }
+
 }

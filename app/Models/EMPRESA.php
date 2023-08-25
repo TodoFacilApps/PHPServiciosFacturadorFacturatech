@@ -56,3 +56,6 @@ class EMPRESA extends Model
         'IpProxy',
     ];
 }
+
+
+

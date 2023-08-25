@@ -31,6 +31,7 @@ class Usuario extends Authenticatable  implements JWTSubject // Added here
         'email',
         'Correo',
         'password',
+        'EmpresaSeleccionada',
         'Telefono'];
 
 

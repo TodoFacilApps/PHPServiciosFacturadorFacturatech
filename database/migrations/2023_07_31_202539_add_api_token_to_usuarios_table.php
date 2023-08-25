@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('USUARIO', function (Blueprint $table) {
             $table->string('api_token', 80)->unique()->nullable()->default(null)->after('password');
+            $table->integer('EmpresaSeleccionada')->nullable()->default(null);
         });
     }
 

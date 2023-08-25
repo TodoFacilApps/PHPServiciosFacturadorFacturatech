@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use App\Modelos\mPaquetePagoFacil;
+use Illuminate\Support\Facades\Auth;
 
 class ProveedorController extends Controller
 {
@@ -44,21 +45,24 @@ class ProveedorController extends Controller
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
         $request->validate([
-            'TipoDocumento'=> 'required',
-            'Documenton'=> 'required',
-            'Nombre'=> 'required',
-            'CodigoInterno'=> 'required',
-            'Correo' => 'required',
-            'DomicilioFiscal' => 'nullable',
-            'ContactoFiscal' => 'required',
-            'NombrePersonalAcargo' => 'required',
-            'ContactoPersonalAcargo' => 'nullable',
-
+            'Proveedor'=> 'required',
         ]);
 
-        $oProveedor = Proveedor::where('TipoDocumento', $request->TipoDocumento)
-        ->where('Documenton', $request->Documenton)
+        $oEmpresaSeleccionada = Auth::user()->EmpresaSeleccionada;
+        // Proceso de Insersion de Productos
+        $valores = explode("þ", $request->Proveedor);
+        $dato;
+        for ($valor = 0; $valor < ( count($valores) -1); $valor++) {
+            $dato = explode("ß", $valores[$valor]);
+        }
+
+
+
+        $oProveedor = Proveedor::where('TipoDocumento', $dato[1])
+        ->where('Documenton', $dato[2])
+        ->where('Empresa', $dato[2])
         ->get();
+
         // validad si existe
         if (!$oProveedor->isEmpty()) {
 
@@ -70,7 +74,21 @@ class ProveedorController extends Controller
                 return response()->json($oPaquete);
         }else{
 
-            $oProveedor = Proveedor::where('Nombre', $request->Nombre)->get();
+            if($oEmpresaSeleccionada){
+                $oProveedor = Proveedor::where('Nombre', $request->Nombre)
+                ->where('TipoDocumento', $dato[1])
+                ->where('Documenton', $dato[2])
+                ->where('Empresa', $oEmpresaSeleccionada)
+                ->get();
+            }else{
+                $oProveedor = Proveedor::where('Nombre', $request->Nombre)
+                ->where('TipoDocumento', $dato[1])
+                ->where('Documenton', $dato[2])
+                ->get();
+                $oEmpresaSeleccionada = 0;
+            }
+
+
             // validad si existe
             if (!$oProveedor->isEmpty()) {
 
@@ -81,23 +99,27 @@ class ProveedorController extends Controller
                     $oPaquete->values = null;
                     return response()->json($oPaquete);
             }else{
+
+
+//                return $oEmpresaSeleccionada;
                 $oProveedor = Proveedor::create([
-                    'TipoDocumento'=> $request->TipoDocumento,
-                    'Documenton'=> $request->Documenton,
-                    'Nombre'=> $request->Nombre,
-                    'CodigoInterno'=> $request->CodigoInterno,
-                    'Correo' => $request->Correo,
-                    'DomicilioFiscal' => $request->DomicilioFiscal,
-                    'ContactoFiscal' => $request->ContactoFiscal,
-                    'NombrePersonalAcargo' => $request->NombrePersonalAcargo,
-                    'ContactoPersonalAcargo' => $request->ContactoPersonalAcargo,
+                    'TipoDocumento'=> $dato[1],
+                    'Documenton'=> $dato[2],
+                    'Nombre'=> $dato[3],
+                    'CodigoInterno'=> $dato[4],
+                    'Correo' => $dato[5],
+                    'DomicilioFiscal' => $dato[6],
+                    'ContactoFiscal' => $dato[7],
+                    'NombrePersonalAcargo' => $dato[8],
+                    'ContactoPersonalAcargo' => $dato[9],
+                    'Empresa' => $oEmpresaSeleccionada,
                 ]);
 
                 $oPaquete->error = 0; // Error Generico
                 $oPaquete->status = 1; // Sucedio un error
                 $oPaquete->messageSistema = "Proveedir creado";
                 $oPaquete->message = "se creo al proveedor";
-                $oPaquete->values = $oProveedor;
+                $oPaquete->values = 1;
                 return response()->json($oPaquete);
             }
         }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EMPRESAUSUARIOPERSONAL extends Model
+class EmpresaUsuarioPersonal extends Model
 {
     use HasFactory;
 
@@ -26,5 +26,9 @@ class EMPRESAUSUARIOPERSONAL extends Model
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'Empresa', 'Empresa');
+    }
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'Usuario', 'Usuario');
     }
 }

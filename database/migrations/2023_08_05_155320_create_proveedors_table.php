@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('ContactoFiscal');
             $table->string('NombrePersonalAcargo');
             $table->string('ContactoPersonalAcargo')->nullable();
+            $table->integer('Empresa');
         });
     }
 

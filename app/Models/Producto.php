@@ -15,10 +15,39 @@ class Producto extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Codigo',
         'Nombre',
-        'ControlStock',
-        'Stock',
+        'Descripcion',
+        'Empresa',
+        'Estado',
+        'TipoProducto',
+        'ActividadEconomica',
+        'CodigoProductoOrigen',
+        'CatalogoImpuestos',
+        'CodigoProductoEmpresa',
+        'TipoProductoEmpresa',
+        'UrlImagen',
+        'Unidad',
+        'Precio',
+        'PrecioPorMayor',
+        'PrecioOferta',
+        'PrecioRemate',
+        'NumeroOpciones',
+        'Novedad',
+        'Oferta',
+        'NroVersion',
+        'Posicion',
+        'Saldo',
+        'ControlaStock',
+        'DecimalesCantidad',
+        'MaximoStock',
+        'Usr',
+        'UsrHora',
+        'UsrFecha',
+        'ClaseSiat',
     ];
 
+    public function unidadMedida()
+    {
+        return $this->belongsTo(UnidadMedida::class, 'Unidad', 'UnidadMedida');
+    }
 }

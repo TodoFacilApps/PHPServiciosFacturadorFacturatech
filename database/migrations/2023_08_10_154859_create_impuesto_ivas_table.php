@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('TOKENSERVICIO', function (Blueprint $table) {
-            $table->id('TokenServicio');
-            $table->text('ApiToken');
-            $table->text('TokenService');
-            $table->text('TokenSecret');
-            $table->text('TokenBearer');
-
+        Schema::create('IMPUESTOIVA', function (Blueprint $table) {
+            $table->id('ImpuestoIVA');
+            $table->string('Porcentaje');
+            $table->double('Valor');
         });
     }
 
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('TOKENSERVICIO');
+        Schema::dropIfExists('IMPUESTOIVA');
     }
 };

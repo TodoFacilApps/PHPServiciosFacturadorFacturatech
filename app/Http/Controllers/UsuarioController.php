@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Usuario;
 use App\Models\Empresa;
+use App\Models\EmpresaUsuarioPersonal;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+
+use App\Modelos\mPaquetePagoFacil;
+use Illuminate\Support\Facades\DB;
+
 
 class UsuarioController extends Controller
 {
@@ -112,7 +117,60 @@ class UsuarioController extends Controller
         ]);
     }
 
+    public function selecionarEmpresa(Request $request)
+    {
+        $request->validate([
+            'Empresa' => 'required',
+        ]);
 
+        $oUser = $request->user();
+        if($request->Empresa == 0){
+            $oUser->EmpresaSeleccionada = 0;
+            $oUser->save();
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "ejecusion sin inconvenientes",
+                'messageMostrar'=> 'se Selecciono la empresa',
+                'messageSistema'=> 'comando ejecutado',
+                'values'=> 1
+            ]);
+
+
+
+        }
+
+        $oUser = $request->user();
+        $oEmpresaspersonal = EmpresaUsuarioPersonal::where('Usuario',$oUser->Usuario)->get();
+        $oEmpresaSeleccionada = Empresa::find($request->Empresa);
+        foreach ($oEmpresaspersonal as $oEmpresapersonal) {
+            $oEmpresaIterada = Empresa::find($oEmpresapersonal->Empresa);
+        //            return $oEmpresaIterada;
+            if($oEmpresaIterada->Empresa == $oEmpresaSeleccionada->Empresa){
+                $oUser->EmpresaSeleccionada = $oEmpresaSeleccionada->Empresa;
+                $oUser->save();
+
+                return response()->json([
+                    'error' => 0,
+                    'status' => 1,
+                    'message'=> "ejecusion sin inconvenientes",
+                    'messageMostrar'=> 'se Selecciono la empresa',
+                    'messageSistema'=> 'comando ejecutado',
+                    'values'=> 1
+                ]);
+
+            }
+        }
+
+        return response()->json([
+            'error' => 1,
+            'status' => 0,
+            'message'=> "a ocurrido un error",
+            'messageMostrar'=> 'la empresa no conforma dentro de las empresas personales del Ususario',
+            'messageSistema'=> 'error de ejecucion',
+            'values'=> null
+        ]);
+    }
 
     public function logout(Request $request)
     {
@@ -137,14 +195,20 @@ class UsuarioController extends Controller
      */
     public function user(Request $request)
     {
-
+        $oUser = $request->user();
+        $oEmpresa = Empresa::find($oUser->EmpresaSeleccionada);
+        if($oEmpresa){
+            $oUser->EmpresaSeleccionada = $oEmpresa->Nombre;
+        }else{
+            $oUser->EmpresaSeleccionada ='Multiempresa';
+        }
         return response()->json([
             'error' => 0,
             'status' => 1,
             'message'=> "Usuario obtenido",
             'messageMostrar'=> 'se obtubo el usuario',
             'messageSistema'=> 'se obtubo el usuario',
-            'values'=> $request->user()
+            'values'=>$oUser
         ]);
 
         return response()->json($request->user());

@@ -23,5 +23,6 @@ class Proveedor extends Model
         'ContactoFiscal',
         'NombrePersonalAcargo',
         'ContactoPersonalAcargo',
+        'Empresa',
     ];
 }
