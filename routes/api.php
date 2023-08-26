@@ -17,6 +17,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\PuntoVentaController;
 use App\Http\Controllers\SincronizacionSiatController;
+use App\Http\Controllers\ClienteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,8 @@ Route::middleware('auth:api')->group(function () {
 
 
     //rutas de productos o servicios
+    Route:: resource( 'clientes', ClienteController::class);
+    Route:: post( 'empresa/clientes', [ClienteController::class, 'optenerClientes']);
     Route:: resource( 'productos', ProductoController::class);
     Route:: post( 'productosEmpresa', [ProductoController::class, 'productosEmpresa']);
     Route:: get( 'productosValores', [ProductoController::class, 'productosValores']);

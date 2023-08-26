@@ -42,6 +42,7 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
+
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
         $request->validate([
@@ -101,7 +102,6 @@ class ProveedorController extends Controller
             }else{
 
 
-//                return $oEmpresaSeleccionada;
                 $oProveedor = Proveedor::create([
                     'TipoDocumento'=> $dato[1],
                     'Documenton'=> $dato[2],

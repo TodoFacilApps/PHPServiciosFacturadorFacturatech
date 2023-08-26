@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
-        //SELECT setval('"PRODUCTO_Producto_seq"', 14666, true);
+        /**
+         * Para poder restapleser la secuencia del auto incrementable del identificador
+         *(nombre de la sacuencia de la tabla(se puede encontrar en los valores defalult del identificador),
+         * numero al cual que quiere apuntar para seguir esa secuencia desde ese punto ,
+         *no estoy bien segura pero se afirma con true para ejecutar la sentencia)
+         *##-SELECT setval('"PRODUCTO_Producto_seq"', 14666, true);
+         */
     }
 }

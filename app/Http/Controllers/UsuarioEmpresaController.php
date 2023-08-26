@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Usuario;
 use App\Models\Empresa;
 use App\Models\EmpresaUsuarioPersonal;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UsuarioEmpresaController extends Controller
 {
@@ -174,4 +177,45 @@ class UsuarioEmpresaController extends Controller
 
         return $ultimoRegistro;
     }
+
+
+    public function misEmpresasReturn()
+    {
+        $oUser = Auth::user();
+        if(is_null($oUser)){
+
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "Dato Invialido",
+                'messageMostrar'=> 'no se encontro al Usuario',
+                'messageSistema'=> 'usuario invalido',
+                'values'=> null,
+            ]);
+        }
+
+        $empresas = Empresa::select('EMPRESA.*')
+            ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
+            ->leftJoin('USUARIO', 'EMPRESAUSUARIOPERSONAL.Usuario', '=', 'USUARIO.Usuario')
+            ->where('USUARIO.Usuario', '=', $oUser->Usuario)
+            ->orderBy('EMPRESA.Empresa', 'asc')
+            ->get();
+
+        return $empresas;
+
+    }
+
+    public function esMiEmpresa($tnEmpresa)
+    {
+        $oUser = Auth::user();
+        if(is_null($oUser)){
+            return false;
+        }
+
+        return EmpresaUsuarioPersonal::where('Usuario', $oUser->Usuario)
+            ->where('Empresa', $tnEmpresa)
+            ->exists();
+
+    }
+
 }
