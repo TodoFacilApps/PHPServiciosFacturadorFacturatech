@@ -26,12 +26,13 @@ return new class extends Migration
             $table->id('VentaDetalle');
             $table->integer('Venta');
             $table->integer('Cantidad');
-            $table->integer('Producto');
+            $table->string('Producto');
+            $table->string('Descripcion');
             $table->integer('UnidadMedida');
-            $table->double('PrecioVenta',2);
-            $table->double('Descuento',2);
-            $table->double('MontoVenta',2);
+            $table->double('PrecioUnitario',2);
             $table->double('MontoDescuento',2);
+            $table->string('NumeroSerie')->nullable();;
+            $table->string('NumeroImei')->nullable();;
             $table->double('SubTotal',2);
         });
     }

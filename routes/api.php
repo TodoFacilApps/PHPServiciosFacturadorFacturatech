@@ -82,13 +82,6 @@ Route::middleware('auth:api')->group(function () {
 
     //proveedores
 
-    //rutas del los catalogos
-    //ejemplo precios unitarios
-    //         precios por docena
-            // precios por paquete
-            // precios por caja
-            //
-
 
     // rutas de pedidos
 
@@ -96,6 +89,9 @@ Route::middleware('auth:api')->group(function () {
     // rutas de ventas
     Route:: resource( 'ventas', VentaController::class);
     Route:: get( 'ventasData', [VentaController::class,'ventasData']);
+    Route:: post( 'ventasData', [VentaController::class,'ventasDataEmpresa']);
+    Route:: post( 'getVentas', [VentaController::class,'getVentas']);
+//    Route:: get( 'reconecTokenReturn', [SincronizacionSiatController::class,'reconecTokenReturn']);
 
     // rutas de remito
 

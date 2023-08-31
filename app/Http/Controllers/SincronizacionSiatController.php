@@ -267,4 +267,97 @@ class SincronizacionSiatController extends Controller
         return $oUser;
     }
 
+
+    public function reconecTokenReturn(){
+
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        try{
+            $oUser = Auth::user();
+            //llega asta aqui
+            $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
+            ->first();
+
+            //enviando credenciales estaticas para las pruevas
+            $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
+            //$token = request()->bearerToken();
+            $url = self::_API . 'login';
+            $data = array(
+                'TokenService' => $oUserApiToken->TokenService, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+                'TokenSecret' => $oUserApiToken->TokenSecret
+            );
+            $header=[
+                'Accept'        => 'application/json',
+            ];
+            $response = $client->post($url, ['headers' => $header,
+            'json' => $data]);
+            $result = json_decode($response->getBody()->getContents());
+            if($result->values != null){
+                $oUserApiToken->TokenBearer=$result->values;
+                $oUserApiToken->save();
+            }
+            $oPaquete->error = 0; // Indicar que hubo un error
+            $oPaquete->status = 1; // Indicar que hubo un error
+            $oPaquete->message = 'comando ejecutado'; // Agregar detalles del error
+            $oPaquete->values = 'comando ejecutado'; // Agregar detalles del error
+            return response()->json($result->values);
+        }catch (\Exception $e) {
+
+            // Aquí puedes manejar el error y devolver una respuesta adecuada
+            $oPaquete->error = 1; // Indicar que hubo un error
+            $oPaquete->status = 0; // Indicar que hubo un error
+            $oPaquete->messageSistema = "Error en el proceso";
+            $oPaquete->message = $e->getMessage(); // Agregar detalles del error
+            return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
+        }
+    }
+
+    public function SincronizacionSiatReturn($tnEmpresa, $tnTipo){
+
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        try{
+            $oAsociacion = Asociacion::where('Empresa', $tnEmpresa)
+            ->where('CodigoAmbiente', 1)
+            ->get();
+
+            $oUser = Auth::user();
+            $result;
+            do{
+                $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
+                ->first();
+
+                //enviando credenciales estaticas para las pruevas
+                $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
+                //$token = request()->bearerToken();
+                $url = self::_API . 'servicio/sincronizacionsiat';
+                $data = array(
+                    'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+                    'tnTipo' => $tnTipo
+                );
+                $header=[
+                        'Accept'        => 'application/json',
+                        'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
+                        ];
+                $response = $client->post($url, ['headers' => $header,
+                                                    'json' => $data]);
+                $result = json_decode($response->getBody()->getContents());
+            //            $result=$result->values;
+                if($result->values==null){
+                    $this->reconecTokenReturn();
+                }
+            } while ($result->values==null);
+            return response()->json($result->values);
+
+        }catch (\Exception $e) {
+            DB::rollback(); // Revertir la transacción en caso de error
+
+            // Aquí puedes manejar el error y devolver una respuesta adecuada
+            $oPaquete->error = 1; // Indicar que hubo un error
+            $oPaquete->status = 0; // Indicar que hubo un error
+            $oPaquete->messageSistema = "Error en el proceso";
+            $oPaquete->message = $e->getMessage(); // Agregar detalles del error
+            return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
+        }
+    return $oUser;
+    }
+
 }

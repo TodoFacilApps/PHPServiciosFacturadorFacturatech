@@ -55,7 +55,27 @@ class EMPRESA extends Model
         'IpServidor',
         'IpProxy',
     ];
+
+
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class, 'Empresa', 'Empresa');
+    }
 }
 
+/**
+ *
+ * protected $table = 'EMPRESA';
+    protected $primaryKey = 'Empresa';
+    public $timestamps = false;
 
+    protected $fillable = [
+        'Nombre',
+        'RazonSocial',
+        'Estado',
+        'Fecha',
+        'Nit',
+    ];
+
+ */
 

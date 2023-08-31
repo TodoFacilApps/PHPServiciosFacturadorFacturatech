@@ -179,7 +179,8 @@ class ProductoController extends Controller
      * @parametro Request
      * @return Object $oPaquete
      */
-    public function FiltrosRegistroProducto(Request $request){
+    public function FiltrosRegistroProducto(Request $request)
+    {
         try{
 
             if($request->tnEstado == 2){
@@ -384,6 +385,7 @@ class ProductoController extends Controller
         ->select('p.*', 'um.Descripcion as Unidad')
         ->join('UNIDADMEDIDA as um', 'p.Unidad', '=', 'um.UnidadMedida')
         ->where('p.Empresa', $oEmpresaSeleccionada)
+        ->where('p.Estado', 1)
         ->orderBy('p.CodigoProductoOrigen')
         ->orderBy('p.ActividadEconomica')
         ->orderBy('p.CatalogoImpuestos')
@@ -420,6 +422,7 @@ class ProductoController extends Controller
             ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
             ->leftJoin('USUARIO', 'EMPRESAUSUARIOPERSONAL.Usuario', '=', 'USUARIO.Usuario')
             ->where('USUARIO.Usuario', '=', $oUser->Usuario)
+            ->where('EMPRESAUSUARIOPERSONAL.Estado', '=', 1 )
             ->orderBy('EMPRESA.Empresa', 'asc')
             ->get();
             $oActividadEconomica;
@@ -456,7 +459,6 @@ class ProductoController extends Controller
                         $result = json_decode($response->getBody()->getContents());
                                 //verifica si su token a exiprado y si es asi este lo actusliza
                         if ($result->values == null){
-                            return ('reconectar');
 
                             //enviando credenciales estaticas para las pruevas
                             $client = new Client(['headers' => ['X-Foo' => 'Bar']]);

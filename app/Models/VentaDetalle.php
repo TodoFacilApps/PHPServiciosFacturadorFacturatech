@@ -9,6 +9,7 @@ class VentaDetalle extends Model
 {
     use HasFactory;
     protected $table = 'VENTADETALLE';
+
     protected $primaryKey = 'VentaDetalle';
     public $timestamps = false;
 
@@ -16,13 +17,15 @@ class VentaDetalle extends Model
         'Venta',
         'Cantidad',
         'Producto',
+        'Descripcion',
         'UnidadMedida',
-        'PrecioVenta',
-        'Descuento',
-        'MontoVenta',
+        'PrecioUnitario',
         'MontoDescuento',
-        'SubTotal',
+        'NumeroSerie',
+        'NumeroImei',
+        'SubTotal'
     ];
+
 
     public function venta()
     {

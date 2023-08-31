@@ -40,3 +40,37 @@ class EmpresaSucursal extends Model
         return $this->hasMany(Empresa::class, 'Empresa', 'Empresa');
     }
 }
+
+
+/**
+ *     protected $table = 'EMPRESA';
+    protected $primaryKey = 'Empresa';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'Nombre',
+        'RazonSocial',
+        'Estado',
+        'Fecha',
+        'Nit',
+    ];
+
+    protected $table = 'EMPRESASUCURSAL';
+    protected $primaryKey = ['Empresa', 'Sucursal'];
+    public $incrementing = false;
+
+    protected $fillable = [
+        'Empresa',
+        'Sucursal',
+        'CodigoSucursal',
+        'Estado',
+        'Telefono',
+        'Direccion',
+    ];
+
+        public function empresa()
+    {
+        return $this->hasMany(Empresa::class, 'Empresa', 'Empresa');
+    }
+
+ */
