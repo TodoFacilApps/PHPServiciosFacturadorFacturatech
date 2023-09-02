@@ -8,6 +8,7 @@ use App\Models\Asociacion;
 use App\Models\Empresa;
 use GuzzleHttp\Client;
 use App\Models\Producto;
+use App\Models\Movimineto;
 use App\Models\UnidadMedida;
 use App\Models\ClaseSiat;
 use App\Models\ActividadEconomica;
@@ -380,7 +381,7 @@ class ProductoController extends Controller
 
         $oEmpresaSeleccionada = $request->tcEmpresa;
 
-        //        return Auth::user()->EmpresaSeleccionada;
+        // return Auth::user()->EmpresaSeleccionada;
         $oProducto = DB::table('PRODUCTO as p')
         ->select('p.*', 'um.Descripcion as Unidad')
         ->join('UNIDADMEDIDA as um', 'p.Unidad', '=', 'um.UnidadMedida')
@@ -528,6 +529,38 @@ class ProductoController extends Controller
     }
 
 
+    public function movimientoProducto(Request $request)
+    {
+        //
+        return $request;
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+
+        $oEmpresaSeleccionada = $request->tcEmpresa;
+
+        // return Auth::user()->EmpresaSeleccionada;
+        $oProducto = DB::table('PRODUCTO as p')
+        ->select('p.*', 'um.Descripcion as Unidad')
+        ->join('UNIDADMEDIDA as um', 'p.Unidad', '=', 'um.UnidadMedida')
+        ->where('p.Empresa', $oEmpresaSeleccionada)
+        ->where('p.Estado', 1)
+        ->orderBy('p.CodigoProductoOrigen')
+        ->orderBy('p.ActividadEconomica')
+        ->orderBy('p.CatalogoImpuestos')
+        ->get();
+
+
+        if($oEmpresaSeleccionada == 0 ){
+            $oProducto = Producto::all();
+        }
+
+
+        $oPaquete->error = 0; // Error Generico
+        $oPaquete->status = 1; // Sucedio un error
+        $oPaquete->messageSistema = "comando ejecutado";
+        $oPaquete->message = "ejecusion sin inconvenientes";
+        $oPaquete->values = $oProducto ;
+        return response()->json($oPaquete);
+    }
 
 
 

@@ -223,13 +223,12 @@ class ClienteController extends Controller
             'tnEmpresa'=> 'required',
         ]);
 
-
-        $oClientes = Cliente::where('Empresa',$request->tnEmpresa);
+        $oClientes = Cliente::where('Empresa',$request->tnEmpresa)->get();
 
         //respuesta de confirmacion
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
-        $oPaquete->messageSistema = "Proveedor Actualizado";
+        $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "se actualizo al Proveedor";
         $oPaquete->values = $oClientes;
         return response()->json($oPaquete);

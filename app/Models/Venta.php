@@ -43,3 +43,11 @@ class Venta extends Model
     }
 
 }
+/**
+ * Agregar un descuento general en la tabla Venta
+ */
+
+
+ /**
+  * posible asocioacion de otra tabla o creacion de muntiples campos para la facturacion
+  */

@@ -19,8 +19,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\TokenServicio;
 use App\Models\claseSiat;
+use App\Models\Movimineto;
 use Carbon\Carbon;
-
 use App\Http\Controllers\SincronizacionSiatController;
 use App\Http\Controllers\UsuarioEmpresaController;
 
@@ -73,9 +73,18 @@ class VentaController extends Controller
                     foreach( $request->VentaDetalle as $detalle ){
                         $oInput = $this->valuesTVentaDetalleToVentaDetalle($detalle, $oVenta->Venta);
                         $oDetalle = VentaDetalle::create($oInput);
-
+                        // añadiendo un contro de movimientos de los productos en la venta
+                        $oMovimineto = Movimineto::create([
+                            'Empresa' => $oVenta->Empresa,
+                            'Sucursal' => $oVenta->Sucursal,
+                            'PuntoVenta' => $oVenta->PuntoVenta,
+                            'Producto' =>$oDetalle->Producto,
+                            'Cantidad' =>$oDetalle->Cantidad,
+                            'TipoMovimiento' => '1',
+                            'Motivo' => 'Venta: ' . $oVenta->Venta,
+                            'Fecha' =>  Carbon::now(),
+                        ]);
                     }
-
                     $oPaquete->error = 0;
                     $oPaquete->status = 1;
                     $oPaquete->messageSistema = "Comando ejecutado";
@@ -86,7 +95,6 @@ class VentaController extends Controller
             DB::commit(); // Confirmar la transacción si todo va bien
             return response()->json($oPaquete);
         }catch (\Exception $e) {
-
             return response()->json($e->getMessage(), 500);
             DB::rollback(); // Revertir la transacción en caso de error
             // Aquí puedes manejar el error y devolver una respuesta adecuada
@@ -134,13 +142,33 @@ class VentaController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
-    public function show(Venta $venta)
+    public function show($tnVenta)
     {
-        //
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        try{
+
+            $oVenta = Venta::find($tnVenta);
+            $oDetalle = VentaDetalle::Where('Venta',$tnVenta)->get();
+
+            $oPaquete->error = 0;
+            $oPaquete->status = 1;
+            $oPaquete->message = "Comando ejecutado";
+            $oPaquete->values = [$oVenta,$oDetalle];
+            return response()->json($oPaquete);
+        }catch (\Exception $e) {
+
+            return response()->json($e->getMessage(), 500);
+            DB::rollback(); // Revertir la transacción en caso de error
+            // Aquí puedes manejar el error y devolver una respuesta adecuada
+            $oPaquete->error = 1; // Indicar que hubo un error
+            $oPaquete->status = 0; // Indicar que hubo un error
+            $oPaquete->messageSistema = "Error en el proceso";
+            $oPaquete->message = $e->getMessage(); // Agregar detalles del error
+            return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
+        }
     }
 
     /**
@@ -290,4 +318,97 @@ class VentaController extends Controller
             'NumeroImei'=> $tVentaDetalle['tcNumeroImei'],
         ];
     }
+
+    public function getVentas(Request $request){
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        try{
+
+            $request->validate([
+                'tnEmpresa'=> 'required',
+                'tnSucursal'=> 'required',
+                'tnPuntoVenta'=> 'required',
+                'tdFInicio'=> 'required',
+                'tdFFin'=> 'required',
+            ]);
+
+            $empresasController = new UsuarioEmpresaController();
+
+            if($empresasController->esMiEmpresa($request->tnEmpresa)){
+                $oVenta;
+
+                if($request->tnSucursal == 0){
+                    $oVenta = DB::table('VENTA as v')
+                    ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.Nombre as Cliente')
+                    ->join('CLIENTE as c', 'v.Cliente', '=', 'c.Cliente')
+                    ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
+                    ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
+                    ->where('v.Empresa', $request->tnEmpresa)
+                    ->whereBetween('v.Fecha', [$request->tdFInicio, $request->tdFFin])
+                    ->get();
+
+                }else{
+                    if($request->tnPuntoVenta == 0){
+                        $oVenta = DB::table('VENTA as v')
+                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.Nombre as Cliente')
+                        ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
+                        ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
+                        ->join('CLIENTE as c', 'v.Cliente', '=', 'c.Cliente')
+                        ->where('v.Empresa', $request->tnEmpresa)
+                        ->where('v.Sucursal',$request->tnSucursal)
+                        ->whereBetween('v.Fecha', [$request->tdFInicio, $request->tdFFin])
+                        ->get();
+
+
+                    }else{
+
+                        // queda pendiente lo del punto de venta
+                        $oVenta = DB::table('VENTA as v')
+                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.Nombre as Cliente')
+                        ->join('CLIENTE as c', 'v.Cliente', '=', 'c.Cliente')
+                        ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
+                        ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
+                        ->where('v.Empresa', $request->tnEmpresa)
+                        ->where('v.Sucursal',$request->tnSucursal)
+                        ->whereBetween('v.Fecha', [$request->tdFInicio, $request->tdFFin])
+                        ->get();
+
+                        /**
+                         * $oVenta = Venta::where('Empresa',$request->tnEmpresa)
+                         * ->where('Sucursal',$request->tnSucursal)
+                         * ->where('PuntoVenta',$request->tnPuntoVenta)
+                         * ->get();
+                         */
+                    }
+                }
+
+                $oPaquete->error = 0;
+                $oPaquete->status = 1;
+                $oPaquete->messageSistema = "sin errores";
+                $oPaquete->message = 'comando ejecutado';
+                $oPaquete->values = [$oVenta];
+            }else{
+                $oPaquete->error = 1;
+                $oPaquete->status = 0;
+                $oPaquete->messageSistema = "errores al ejecutar comando";
+                $oPaquete->message = 'la empresa no esta relacionada con el usuario';
+                $oPaquete->values = null;
+            }
+
+
+            return response()->json($oPaquete);
+        }catch (\Exception $e) {
+            DB::rollback(); // Revertir la transacción en caso de error
+            // Aquí puedes manejar el error y devolver una respuesta adecuada
+            $oPaquete->error = 1; // Indicar que hubo un error
+            $oPaquete->status = 0; // Indicar que hubo un error
+            $oPaquete->messageSistema = "Error en el proceso";
+            $oPaquete->message = $e->getMessage(); // Agregar detalles del error
+            return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
+        }
+    }
+
 }
+
+
+
+/** */

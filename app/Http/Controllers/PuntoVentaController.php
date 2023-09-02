@@ -80,8 +80,8 @@ class PuntoVentaController extends Controller
                     $oPaquete->values = null;
                     return response()->json($oPaquete);
             }else{
-//                return $oEmpresaSeleccionada;
-//            return $dato;
+            //return $oEmpresaSeleccionada;
+            //return $dato;
 
                 $oPuntoVenta = PuntoVenta::create([
                     'Codigo'=> $dato[0],
@@ -147,7 +147,6 @@ class PuntoVentaController extends Controller
             'ControlStock'=> 'required',
             'Stock'=> 'required',
             'Estado' => 'nullable',
-
         ]);
 
         $oProducto = Producto::find($InProducto)->get();

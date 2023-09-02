@@ -79,7 +79,6 @@ class UsuarioController extends Controller
         ], 201);
     }
 
-
     public function login(Request $request)
     {
         $request->validate([
@@ -213,6 +212,77 @@ class UsuarioController extends Controller
 
         return response()->json($request->user());
     }
+
+    public function update(Request $request,$tnVenta)
+    {
+        $recurso = Usuario::find($tnVenta);
+        $recurso->update($request->all());
+        $recurso->save();
+
+        return response()->json([
+            'error' => 0,
+            'status' => 1,
+            'message'=> "Usuario obtenido",
+            'messageMostrar'=> 'se obtubo el usuario',
+            'messageSistema'=> 'se obtubo el usuario',
+            'values'=>$recurso
+        ]);
+
+
+    }
+
+    public function userPass(Request $request)
+    {
+        $oUser = Auth::user();
+        $request->validate([
+            'tcActual' => 'required',
+            'tcNueva' => 'required',
+            'tcConfirmar' => 'required',
+        ]);
+
+        if($request->tcNueva != $request->tcConfirmar){
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> "la contraseña Repetida no coincide",
+                'messageSistema'=> 'a ocurrido un error',
+                'values'=>null
+            ]);
+        }
+
+        #Match The Old Password
+        if(!Hash::check($request->tcActual, auth()->user()->password)){
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> "la contraseña actual no coincide",
+                'messageSistema'=> 'error',
+                'values'=>null
+            ]);
+        }
+
+        #Update the new Password
+        Usuario::whereId(auth()->user()->id)->update([
+            'password' => Hash::make($request->tcNueva)
+        ]);
+
+        Auth::logout();
+
+        return back()->with("status", "Password changed successfully!");
+
+
+        return response()->json([
+            'error' => 0,
+            'status' => 1,
+            'message'=> "el Usuario a Actualizado su contraseña",
+            'messageMostrar'=> '',
+            'messageSistema'=> 'Contraseña Actualizada',
+            'values'=>$recurso
+        ]);
+
+
+    }
+
 }
 /*
 

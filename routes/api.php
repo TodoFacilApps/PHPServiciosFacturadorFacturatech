@@ -44,8 +44,10 @@ Route::get('/empresas', [PruevaBlogController::class, 'ApiIndex'] );
 // Rutas protegidas (requieren autenticación con el middleware 'auth:api')
 Route::middleware('auth:api')->group(function () {
     //rutas Usuario
+    Route::resource('user', UsuarioController::class);
     Route::get('logout', [UsuarioController::class, 'logout']);
     Route::get('user', [UsuarioController::class, 'user']);
+    Route::post('userPass', [UsuarioController::class, 'userPass']);
     Route::post('selecionarEmpresa', [UsuarioController::class, 'selecionarEmpresa']);
     // rutas relacionadas con la empresa
     Route::post('registrarEmpresa', [UsuarioEmpresaController::class, 'store']);
@@ -72,7 +74,10 @@ Route::middleware('auth:api')->group(function () {
     Route:: post( 'empresa/clientes', [ClienteController::class, 'optenerClientes']);
     Route:: resource( 'productos', ProductoController::class);
     Route:: post( 'productosEmpresa', [ProductoController::class, 'productosEmpresa']);
+    Route:: post( 'movimientos', [ProductoController::class, 'movimientoProducto']);
     Route:: get( 'productosValores', [ProductoController::class, 'productosValores']);
+
+
     Route:: resource( 'ingresos', IngresoController::class);
     Route:: get( 'ingresos-valoresprevios', [IngresoController::class, 'valoresPrevios']);
     Route:: resource( 'proveedores', ProveedorController::class);
