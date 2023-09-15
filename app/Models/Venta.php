@@ -16,32 +16,47 @@ class Venta extends Model
         'Empresa',
         'Sucursal',
         'PuntoVenta',
-        'Cliente',
         'Fecha',
-        'Total',
+        'Hora',
+        'SubTotal',
+        'TotalDesc',
+        'TotalVenta',
+        'Cargo',
+        'GiftCard',
+        'TotalPagar',
+        'ImporteIva',
         'Moneda',
+        'MetodoPago',
+        'Nro4Init',
+        'Nro4Fin',
+        'Cliente',
     ];
+
 
     public function empresa()
     {
-        return $this->hasMany(Empresa::class, 'Empresa', 'Empresa');
+        return $this->belongsTo(Empresa::class, 'Empresa');
     }
-
     public function sucursal()
     {
-        return $this->hasMany(Sucursal::class, 'Sucursal', 'Sucursal');
+        return $this->belongsTo(EmpresaSucursal::class, 'Sucurasal');
     }
-
     public function puntoVenta()
     {
-        return $this->hasMany(PuntoVenta::class, 'PuntoVenta', 'PuntoVenta');
+        return $this->belongsTo(PuntoVenta::class, 'PuntoVenta');
     }
+
+
 
     public function moneda()
     {
         return $this->hasMany(Moneda::class, 'Moneda', 'Moneda');
     }
 
+    public function detalles()
+    {
+        return $this->hasMany(VentaDetalle::class,'Venta');
+    }
 }
 /**
  * Agregar un descuento general en la tabla Venta

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\TokenServicio;
+use App\Http\Controllers\UsuarioEmpresaController;
 
 
 class CatalogoController extends Controller
@@ -286,14 +287,13 @@ class CatalogoController extends Controller
 
     public function catalogoData(Request $request)
     {
-        $oEmpresaSeleccionada;
-//        return 'hola';
-
-        $oEmpresaSeleccionada = Auth::user()->EmpresaSeleccionada;
-
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
-        $oInput = TokenServicio :: where('ApiToken',Auth::user()->api_token)->get()[0];
 
+        $oEmpresaSeleccionada;
+        $empresasController = new UsuarioEmpresaController();
+        $oEmpresas = $empresasController->misEmpresasReturn();
+
+        $oInput = TokenServicio :: where('Empresa',$oEmpresas[0]->Empresa)->get()[0];
 
         $oEmpresa =  Empresa::select('EMPRESA.*')
         ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
@@ -302,10 +302,8 @@ class CatalogoController extends Controller
         ->orderBy('EMPRESA.Empresa', 'asc')
         ->get();
 
-
-
-        $oProducto = Producto::where('Empresa',$oEmpresa[0]->Empresa)->get();
-        $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresaSeleccionada)->get();
+        $oProducto = Producto::where('Empresa',$oEmpresas[0]->Empresa)->get();
+        $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresas[0]->Empresa)->get();
 
         $tnActividad = [1,18];
 

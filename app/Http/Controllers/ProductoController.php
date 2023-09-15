@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
+use App\Http\Controllers\UsuarioEmpresaController;
+use App\Http\Controllers\SincronizacionSiatController;
+
+
 class ProductoController extends Controller
 {
     const _API = 'http://apirest.facturatech.com.bo/api/';
@@ -372,7 +376,6 @@ class ProductoController extends Controller
 
     }
 
-
     public function productosEmpresa(Request $request)
     {
         //
@@ -416,8 +419,6 @@ class ProductoController extends Controller
         try{
 
             $oClaseSiat = ClaseSiat::all();
-            $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
-            ->first();
 
             $oEmpresas = Empresa::select('EMPRESA.*')
             ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
@@ -426,6 +427,10 @@ class ProductoController extends Controller
             ->where('EMPRESAUSUARIOPERSONAL.Estado', '=', 1 )
             ->orderBy('EMPRESA.Empresa', 'asc')
             ->get();
+
+            $oUserApiToken = TokenServicio::where('Empresa', $oEmpresas[0]->Empresa)
+            ->first();
+
             $oActividadEconomica;
             $oUnidadMedida;
             $oCatalogoIm;
@@ -433,71 +438,21 @@ class ProductoController extends Controller
             if(!$oEmpresas->isEmpty()){
                 $tnActividades = [1,6,18];
                 $lnEmpresa = $oEmpresas[0]->Empresa;
-
-                $oAsociacion = Asociacion::where('Empresa', $lnEmpresa)
-                ->where('CodigoAmbiente', 1)
-                ->get();
-
-
                 foreach ($tnActividades as $tnActividad) {
-                    $lltokenHabilitado = true;
-                    do {
-                        //enviando credenciales estaticas para las pruevas
-                        $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
-                        //$token = request()->bearerToken();
-                        $url = self::_API . 'servicio/sincronizacionsiat';
-                        $data = array(
-                            'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-                            'tnTipo' => $tnActividad
-                        );
-                        $header=[
-                                'Accept'        => 'application/json',
-                                'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
-                                ];
-
-                        $response = $client->post($url, ['headers' => $header,
-                                                            'json' => $data]);
-                        $result = json_decode($response->getBody()->getContents());
-                                //verifica si su token a exiprado y si es asi este lo actusliza
-                        if ($result->values == null){
-
-                            //enviando credenciales estaticas para las pruevas
-                            $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
-                            //$token = request()->bearerToken();
-                            $url = self::_API . 'login';
-                            $data = array(
-                                'TokenService' => $oUserApiToken->TokenService, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-                                'TokenSecret' => $oUserApiToken->TokenSecret
-                            );
-                            $header=[
-                                    'Accept'        => 'application/json',
-                                    ];
-                            $response = $client->post($url, ['headers' => $header,
-                                                                'json' => $data]);
-                            $result = json_decode($response->getBody()->getContents());
-
-                            //llega asta aqui
-                            $oUserApiToken->TokenBearer = ($result->values);
-                            $oUserApiToken->save();
-
-                            return $result;
-                            $lltokenHabilitado =true;
-                        }else{
-                            $lltokenHabilitado =false;
-                        }
-                    } while ($lltokenHabilitado);
+                    $sincSiatController = new SincronizacionSiatController();
+                    $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresa,$tnActividad);
 
                     switch ($tnActividad) {
                         case 1:
-                            $oActividadEconomica = $result->values;
+                            $oActividadEconomica = $result->original;
                             break;
 
                         case 6:
-                            $oCatalogoIm = $result->values;
+                            $oCatalogoIm = $result->original;
                             break;
 
                         case 18:
-                            $oUnidadMedida = $result->values;
+                            $oUnidadMedida = $result->original;
                             break;
 
                         default:

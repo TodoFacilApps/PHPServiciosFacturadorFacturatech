@@ -196,9 +196,12 @@ class UsuarioController extends Controller
     {
         $oUser = $request->user();
         $oEmpresa = Empresa::find($oUser->EmpresaSeleccionada);
+        $lcUrlLogo;
         if($oEmpresa){
+            $lcUrlLogo = $oEmpresa->UrlLogo;
             $oUser->EmpresaSeleccionada = $oEmpresa->Nombre;
         }else{
+            $lcUrlLogo =env('APP_URL') .'/imagenes/default/prodductoServicio.jpg';
             $oUser->EmpresaSeleccionada ='Multiempresa';
         }
         return response()->json([
@@ -207,7 +210,7 @@ class UsuarioController extends Controller
             'message'=> "Usuario obtenido",
             'messageMostrar'=> 'se obtubo el usuario',
             'messageSistema'=> 'se obtubo el usuario',
-            'values'=>$oUser
+            'values'=>[$oUser,$lcUrlLogo]
         ]);
 
         return response()->json($request->user());
@@ -282,7 +285,6 @@ class UsuarioController extends Controller
 
 
     }
-
 }
 /*
 

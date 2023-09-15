@@ -8,25 +8,12 @@ use App\Models\EmpresaUsuarioPersonal;
 use Illuminate\Http\Request;
 use App\Modelos\mPaquetePagoFacil;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+
 
 class SucursalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-        return 'este es el index';
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,18 +21,37 @@ class SucursalController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tcSucursal' => 'required',
+            'tnEmpresa'=> 'required',
+            'tcDireccion'=> 'required',
+            'tcLocalidad'=> 'required',
+            'tcTelefono'=> 'required',
         ]);
-        $dato = explode("ß", $request->tcSucursal);
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
-
             DB::beginTransaction(); // Iniciar la transacción
+            $oSucursal = DB::table('EMPRESASUCURSAL')
+                ->where('Empresa', $request->tnEmpresa)
+                ->select(DB::raw('MAX("CodigoSucursal") as "CodigoSucursal"'))
+                ->first();
+
+            $olnSucursal = DB::table('EMPRESASUCURSAL')
+                ->select(DB::raw('MAX("Sucursal") as "Sucursal"'))
+                ->first();
+
+            $lnSucursal = $olnSucursal ? $olnSucursal->Sucursal + 1 : 1;
+
+            $nextCodigoSucursal = $oSucursal ? $oSucursal->CodigoSucursal + 1 : 0;
+
             $oSucursal = EmpresaSucursal::create([
-                'Codigo' => $dato[0],
-                'Direccion' => $dato[1],
-                'Empresa' => $dato[2]
+                'Empresa' => $request->tnEmpresa,
+                'Sucursal' => $lnSucursal,
+                'CodigoSucursal' => $nextCodigoSucursal,
+                'Direccion' => $request->tcDireccion,
+                'Localidad' => $request->tcLocalidad,
+                'Telefono' => $request->tcTelefono,
+                'Estado' => 1,
             ]);
+
 
             DB::commit(); // Confirmar la transacción si todo va bien
             $oPaquete->error = 0; // Error Generico
@@ -53,7 +59,7 @@ class SucursalController extends Controller
             $oPaquete->messageSistema = "Comanndo ejecutado";
             $oPaquete->message = "ejecusion sin inconvenientes";
             $oPaquete->messageMostrar = "Catalogo agregado sin productos";
-            $oPaquete->values = 1;
+            $oPaquete->values = $oSucursal;
             return response()->json($oPaquete);
 
         }catch (\Exception $e) {
@@ -175,7 +181,8 @@ class SucursalController extends Controller
                 $oPaquete->messageMostrar = "";
                 $oPaquete->values = null;
                 }else{
-                    $oPuntosVenta = PuntoVenta::where('Sucursal', $request->tnSucursal)->get();
+                    $oPuntosVenta = PuntoVenta::where('Estado',2)
+                    ->where('Sucursal', $request->tnSucursal)->get();
                     $oPaquete->error = 0; // Error Generico
                     $oPaquete->status = 1; // Sucedio un error
                     $oPaquete->messageSistema = "Comanndo ejecutado";

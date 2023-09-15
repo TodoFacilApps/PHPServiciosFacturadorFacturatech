@@ -12,6 +12,7 @@ class EmpresaSucursal extends Model
     protected $table = 'EMPRESASUCURSAL';
     protected $primaryKey = ['Empresa', 'Sucursal'];
     public $incrementing = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'Empresa',

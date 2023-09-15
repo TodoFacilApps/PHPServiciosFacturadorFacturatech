@@ -10,10 +10,10 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {// este fin de semana revisar esto y adaptarlo con la tabla Empresa Token
         Schema::create('TOKENSERVICIO', function (Blueprint $table) {
             $table->id('TokenServicio');
-            $table->text('ApiToken');
+            $table->integer('Empresa')->uniqid();
             $table->text('TokenService');
             $table->text('TokenSecret');
             $table->text('TokenBearer');

@@ -57,11 +57,18 @@ class EMPRESA extends Model
     ];
 
 
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'Pais', 'Pais');
+    }
+
+
     public function sucursales()
     {
         return $this->hasMany(Sucursal::class, 'Empresa', 'Empresa');
     }
 }
+
 
 /**
  *

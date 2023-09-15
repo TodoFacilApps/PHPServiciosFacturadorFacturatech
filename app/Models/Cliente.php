@@ -15,25 +15,17 @@ class Cliente extends Model
 
     protected $fillable = [
         'Empresa',
-        'Nombre',
-        'Apellidos',
+        'CodigoCliente',
+        'RazonSocial',
         'TipoDocumento',
         'Documento',
-        'Direccion',
-        'Email',
+        'Complemento',
+        'NitEspecial',
         'Telefono',
+        'Email',
         'Usr',
         'UsrFecha',
-        'UsrHora'
-    ];
-
-    protected $casts = [
-        'TipoDocumento' => 'integer',
-        'Usr' => 'integer',
-    ];
-
-    protected $dates = [
-        'UsrFecha',
+        'UsrHora',
     ];
 
     public function empresa()

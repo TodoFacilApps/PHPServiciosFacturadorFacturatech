@@ -12,6 +12,7 @@ use App\Models\Asociacion;
 use App\Models\Empresa;
 use GuzzleHttp\Client;
 use App\Models\Producto;
+use App\Models\Descuento;
 use App\Models\UnidadMedida;
 use App\Models\ClaseSiat;
 use App\Models\ActividadEconomica;
@@ -21,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\SincronizacionSiatController;
 use App\Http\Controllers\UsuarioEmpresaController;
+use App\Http\Controllers\ConsultaController;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -50,11 +52,26 @@ class ClienteController extends Controller
             $oClientes = Cliente::where('Empresa',$oEmpresas[0]->Empresa)->get();
         }
 
+        $sincSiatController = new SincronizacionSiatController();
+        $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
+        $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
+        $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
+        return [
+                    'Tipo' => $oTipoDocumentoIdentidad->codigoClasificador,
+                    'Nombre' => $oTipoDocumentoIdentidad->descripcion,
+                ];
+            },
+            $oTipoDocumentoIdentidad);
+
+        $oDescuento = Descuento::where('Empresa',$oEmpresas[0]->Empresa)
+        ->where('Estado',1)->get();
+
+
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = [$oEmpresas,$oClientes] ;
+        $oPaquete->values = [$oEmpresas,$oClientes,$oTipoDocumentoIdentidad] ;
         return response()->json($oPaquete);
     }
 
@@ -73,11 +90,12 @@ class ClienteController extends Controller
           DB::beginTransaction(); // Iniciar la transacción
           $request->validate([
                 'tnEmpresa'=> 'required',
-                'tcNombre'=> 'required',
-                'tcApellidos'=> 'required',
+                'tcRazonSocial'=> 'required',
                 'tnTipoDocumento'=> 'required',
                 'tcDocumento'=> 'required',
-                'tcDireccion'=> 'nullable',
+                'tcComplemento'=> 'nullable',
+                'tcNitEspecial'=> 'nullable',
+                'tcCodigoCliente'=> 'nullable',
                 'tcEmail'=> 'nullable',
                 'tcTelefono'=> 'nullable',
             ]);
@@ -102,7 +120,7 @@ class ClienteController extends Controller
                     $oPaquete->status = 1; // Sucedio un error
                     $oPaquete->messageSistema = "comando ejecutado";
                     $oPaquete->message = "cliente registrado";
-                    $oPaquete->values = null;
+                    $oPaquete->values = $oCliente;
                 }
                 DB::commit(); // Confirmar la transacción si todo va bien
             }else{
@@ -164,15 +182,16 @@ class ClienteController extends Controller
         try{
           DB::beginTransaction(); // Iniciar la transacción
           $request->validate([
-                'tnEmpresa'=> 'required',
-                'tcNombre'=> 'required',
-                'tcApellidos'=> 'required',
-                'tnTipoDocumento'=> 'required',
-                'tcDocumento'=> 'required',
-                'tcDireccion'=> 'nullable',
-                'tcEmail'=> 'nullable',
-                'tcTelefono'=> 'nullable',
-            ]);
+            'tnEmpresa'=> 'required',
+            'tcRazonSocial'=> 'required',
+            'tnTipoDocumento'=> 'required',
+            'tcDocumento'=> 'required',
+            'tcComplemento'=> 'required',
+            'tcNitEspecial'=> 'nullable',
+            'tcCodigoCliente'=> 'nullable',
+            'tcEmail'=> 'nullable',
+            'tcTelefono'=> 'nullable',
+        ]);
 
             $oUser = Auth::user();
             $empresasController = new UsuarioEmpresaController();
@@ -238,11 +257,12 @@ class ClienteController extends Controller
     public function valueTClienteToCliente(Request $request){
         return [
             'Empresa'=> $request->tnEmpresa,
-            'Nombre'=> $request->tcNombre,
-            'Apellidos'=> $request->tcApellidos,
+            'CodigoCliente'=> $request->tcDocumento,
+            'RazonSocial'=> $request->tcRazonSocial,
             'TipoDocumento'=> $request->tnTipoDocumento,
             'Documento'=> $request->tcDocumento,
-            'Direccion'=> $request->tcDireccion,
+            'Complemento'=> $request->tcComplemento,
+            'NitEspecial'=> $request->tcNitEspecial,
             'Email'=> $request->tcEmail,
             'Telefono'=> $request->tcTelefono,
             'Usr' =>Auth::user()->Usuairo,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Usuario;
+use App\Models\Pais;
 use App\Models\Empresa;
 use App\Models\EmpresaUsuarioPersonal;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,7 @@ class UsuarioEmpresaController extends Controller
     }
 
     /**
+     *
      * mis  empresas
      */
     public function misEmpresas(Request $request)
@@ -127,8 +129,14 @@ class UsuarioEmpresaController extends Controller
 
 
         //      return $empresas;
-        // Generar y devolver el token JWT para el usuario recién registrado
-        $empresa = Empresa::find($InEmpresa);
+        // queda pendiente lo del punto de venta
+        $empresa = DB::table('EMPRESA as e')
+        ->select('e.*','p.Nombre as Pais')
+        ->join('PAIS as p', 'p.Pais', '=', 'e.Pais')
+        ->where('e.Empresa',$InEmpresa)
+        ->first();
+
+
         if(is_null($empresa)){
             return response()->json([
                 'error' => 0,
@@ -217,5 +225,11 @@ class UsuarioEmpresaController extends Controller
             ->exists();
 
     }
+
+    public function ver(){
+        $oEmpresas = $this->misEmpresasReturn();
+        return $this->show($oEmpresas[0]->Empresa);
+    }
+
 
 }

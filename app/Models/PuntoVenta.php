@@ -13,9 +13,23 @@ class PuntoVenta extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Codigo',
+        'CodigoPuntoVenta',
         'Nombre',
+        'Estado',
+        'Descripcion',
+        'CodigoAmbiente',
+        'CodigoModalidad',
         'Sucursal',
+        'CodigoSucursal',
+        'CodigoTipoPuntoVenta',
+        'CodigoSistema',
+        'Cuis',
+        'Nit',
+        'SolicitarCUFDPorDemon',
+        'HoraSolicitudCUFDPorDemon',
+        'Usr',
+        'UsrHora',
+        'UsrFecha',
     ];
 
     public function sucursal()

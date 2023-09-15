@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PruevaBlogController;
@@ -18,6 +17,9 @@ use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\PuntoVentaController;
 use App\Http\Controllers\SincronizacionSiatController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConsultaController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,8 @@ Route::post('signup', [UsuarioController::class, 'signup']);
 Route::post('/register', [UsuarioController::class, 'register']);
 Route::post('login', [UsuarioController::class, 'login']);
 
+
+Route::post('envioMensaje', [EmailController::class, 'contact']);
 Route::get('/empresas', [PruevaBlogController::class, 'ApiIndex'] );
 
 
@@ -43,20 +47,28 @@ Route::get('/empresas', [PruevaBlogController::class, 'ApiIndex'] );
 
 // Rutas protegidas (requieren autenticación con el middleware 'auth:api')
 Route::middleware('auth:api')->group(function () {
+
     //rutas Usuario
     Route::resource('user', UsuarioController::class);
     Route::get('logout', [UsuarioController::class, 'logout']);
     Route::get('user', [UsuarioController::class, 'user']);
     Route::post('userPass', [UsuarioController::class, 'userPass']);
     Route::post('selecionarEmpresa', [UsuarioController::class, 'selecionarEmpresa']);
+
     // rutas relacionadas con la empresa
     Route::post('registrarEmpresa', [UsuarioEmpresaController::class, 'store']);
     Route::get('misEmpresa', [UsuarioEmpresaController::class, 'misEmpresas']);
+    Route::get('misEmpresa/ver', [UsuarioEmpresaController::class, 'ver']);
     Route::get('/misEmpresa/{id}', [UsuarioEmpresaController::class, 'show'])->name('empresas.show');
     Route:: resource( 'sucursales', SucursalController::class);
     Route:: post( 'empresaSucursal', [SucursalController::class, 'empresaSucursal']);
     Route:: post( 'sucursalPuntoVenta', [SucursalController::class, 'sucursalPuntoVenta']);
     Route:: resource( 'puntoVentas', PuntoVentaController::class);
+
+    //rutas Home
+    Route::get('presentacion', [HomeController::class, 'dashboard']);
+
+    Route::post('home', [HomeController::class, 'dashboardEmpresa']);
 
     //rutas relacionadas con el negocion principal
     Route::post('registerToken', [TokenServicioController::class, 'store']);
@@ -96,11 +108,14 @@ Route::middleware('auth:api')->group(function () {
     Route:: get( 'ventasData', [VentaController::class,'ventasData']);
     Route:: post( 'ventasData', [VentaController::class,'ventasDataEmpresa']);
     Route:: post( 'getVentas', [VentaController::class,'getVentas']);
-//    Route:: get( 'reconecTokenReturn', [SincronizacionSiatController::class,'reconecTokenReturn']);
+    Route:: post( 'emitirSiat', [VentaController::class,'emitirSiat']);
+    Route:: post( 'estadoSiat', [VentaController::class,'estadoSiat']);
+    //    Route:: get( 'reconecTokenReturn', [SincronizacionSiatController::class,'reconecTokenReturn']);
 
-    // rutas de remito
 
     //rutas de facturas
+    Route:: post( 'crearFactura', [VentaController::class,'crearFactura']);
+
 
     //rutas de Parametros
     Route:: resource( 'unidadMedidas', UnidadMedidaController::class);

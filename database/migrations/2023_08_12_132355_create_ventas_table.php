@@ -16,16 +16,29 @@ return new class extends Migration
             $table->integer('Empresa');
             $table->integer('Sucursal');
             $table->integer('PuntoVenta');
-            $table->integer('Cliente');
             $table->date('Fecha');
-            $table->double('Total',2);
+            $table->time('Hora');
+
+
+            $table->double('SubTotal',2);
+            $table->double('TotalDesc',2);
+            $table->double('TotalVenta',2);
+            $table->double('GiftCard',2);
+            $table->double('TotalPagar',2);
+            $table->double('ImporteIva',2);
+
+
             $table->integer('Moneda');
+            $table->integer('MetodoPago');
+            $table->integer('Nro4Init')->nullable();
+            $table->integer('Nro4Fin')->nullable();
+            $table->integer('Cliente');
         });
 
         Schema::create('VENTADETALLE', function (Blueprint $table) {
             $table->id('VentaDetalle');
             $table->integer('Venta');
-            $table->integer('Cantidad');
+            $table->decimal('Cantidad', $totalDigits = 8, $decimalPlaces = 2);
             $table->string('Producto');
             $table->string('Descripcion');
             $table->integer('UnidadMedida');

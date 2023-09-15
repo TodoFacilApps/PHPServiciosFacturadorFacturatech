@@ -11,7 +11,9 @@ use App\Models\Asociacion;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\TokenServicio;
+use App\Models\EmpresaToken;
 use App\Models\claseSiat;
+use App\Http\Controllers\UsuarioEmpresaController;
 
 
 
@@ -28,9 +30,7 @@ class SincronizacionSiatController extends Controller
 
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
-            DB::beginTransaction(); // Iniciar la transacción
             $request->validate([
-                'tcToken'=> 'required',
                 'tnEmpresa'=> 'required',
                 'tnTipo'=> 'required',
             ]);
@@ -51,28 +51,16 @@ class SincronizacionSiatController extends Controller
 
         } else {
 
-            $oAsociacion = Asociacion::where('Empresa', $request->tnEmpresa)
-            ->where('CodigoAmbiente', 1)
-            ->get();
-            //enviando credenciales estaticas para las pruevas
-            $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
-            //$token = request()->bearerToken();
-            $url = self::_API . 'servicio/sincronizacionsiat';
-            $data = array(
-                'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-                'tnTipo' => $request->tnTipo
-             );
-            $header=[
-                    'Accept'        => 'application/json',
-                    'Authorization' => 'Bearer ' . $request->tcToken // Reemplaza esto con tu token
-                    ];
-            $response = $client->post($url, ['headers' => $header,
-                                                'json' => $data]);
-            $result = json_decode($response->getBody()->getContents());
-        //            $result=$result->values;
+            $result = $this->SincronizacionSiatReturn($request->tnEmpresa, $request->tnTipo);
 
-            DB::commit(); // Confirmar la transacción si todo va bien
-            return response()->json($result);
+            $oPaquete->error = 0; // Indicar que hubo un error
+            $oPaquete->status = 1; // Indicar que hubo un error
+            $oPaquete->messageSistema = "comando ejecutado";
+            $oPaquete->message = "ejecucion sin inconvenientes";
+            $oPaquete->messageMostrar = "0";
+            $oPaquete->values = $result ;
+
+            return response()->json($oPaquete);
         }
 
         }catch (\Exception $e) {
@@ -85,7 +73,7 @@ class SincronizacionSiatController extends Controller
             $oPaquete->message = $e->getMessage(); // Agregar detalles del error
             return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
         }
-    return $oUser;
+        return $oUser;
     }
 
 
@@ -102,12 +90,12 @@ class SincronizacionSiatController extends Controller
 
 
     public function userApiToken(){
-
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
+            $empresasController = new UsuarioEmpresaController();
+            $oEmpresas = $empresasController->misEmpresasReturn();
 
-            $oUser = Auth::user();
-            $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
+            $oUserApiToken = TokenServicio::where('Empresa', $oEmpresas[0]->Empresa)
             ->get();
 
             //llega asta aqui
@@ -116,7 +104,7 @@ class SincronizacionSiatController extends Controller
             }else{
                 $oPaquete->error = 0; // Indicar que hubo un error
                 $oPaquete->status = 1; // Indicar que hubo un error
-                $oPaquete->messageSistema = "Comando ejecutado";
+                $oPaquete->message = "Comando ejecutado";
                 $oPaquete->values = $oUserApiToken[0];
             }
 
@@ -213,7 +201,6 @@ class SincronizacionSiatController extends Controller
                 'tcService'=> 'required',
                 'tcSecret'=> 'required',
             ]);
-
             $oUser = Auth::user();
 
             //enviando credenciales estaticas para las pruevas
@@ -224,6 +211,7 @@ class SincronizacionSiatController extends Controller
                 'TokenService' => $request->tcService, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
                 'TokenSecret' => $request->tcSecret
              );
+
             $header=[
                     'Accept'        => 'application/json',
                     ];
@@ -241,13 +229,13 @@ class SincronizacionSiatController extends Controller
                 $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
                     ->first();
                 if ($oUserApiToken) {//si el usuario ya esta asocioado con un ApiToken
-                    $oUserTokenSiat = TokenServicio::create($requestData);
-                    //return response()->json($result);
-                }else{
                     $oUserApiToken->TokenService=$requestData['TokenService'];
                     $oUserApiToken->TokenSecret=$requestData['TokenSecret'];
                     $oUserApiToken->TokenBearer=$result->values;
                     $oUserApiToken->save();
+                    //return response()->json($result);
+                }else{
+                    $oUserTokenSiat = TokenServicio::create($requestData);
                 }
 
             }
@@ -268,15 +256,18 @@ class SincronizacionSiatController extends Controller
     }
 
 
-    public function reconecTokenReturn(){
+    public function reconecTokenReturn($tnEmpresa){
 
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
-            $oUser = Auth::user();
-            //llega asta aqui
-            $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
-            ->first();
-
+            $oUserApiToken = EmpresaToken::where('Empresa',$tnEmpresa)
+            ->where('Serial',1)->first();
+            if(!$oUserApiToken){
+                return ([
+                    'values'=>'la Empresa no tiene habilitado sus credenciales para la comnectar a Siat',
+                    'error'=>1
+                ]);
+            }
             //enviando credenciales estaticas para las pruevas
             $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
             //$token = request()->bearerToken();
@@ -292,8 +283,18 @@ class SincronizacionSiatController extends Controller
             'json' => $data]);
             $result = json_decode($response->getBody()->getContents());
             if($result->values != null){
-                $oUserApiToken->TokenBearer=$result->values;
-                $oUserApiToken->save();
+                $oTokenService = ToKenServicio::where('Empresa',$tnEmpresa)->first();
+                if($oTokenService){
+                    $oTokenService->TokenBearer=$result->values;
+                    $oTokenService->save();
+                }else{
+                    $oTokenService=TokenServicio::create([
+                       'TokenService' =>  $oUserApiToken->TokenService,
+                       'TokenSecret' =>  $oUserApiToken->TokenSecret,
+                       'TokenBearer' =>  $result->values,
+                       'Empresa' =>  $tnEmpresa,
+                    ]);
+                }
             }
             $oPaquete->error = 0; // Indicar que hubo un error
             $oPaquete->status = 1; // Indicar que hubo un error
@@ -312,39 +313,39 @@ class SincronizacionSiatController extends Controller
     }
 
     public function SincronizacionSiatReturn($tnEmpresa, $tnTipo){
-
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
             $oAsociacion = Asociacion::where('Empresa', $tnEmpresa)
             ->where('CodigoAmbiente', 1)
             ->get();
 
-            $oUser = Auth::user();
-            $result;
+            $result =null;
             do{
-                $oUserApiToken = TokenServicio::where('ApiToken', $oUser->api_token)
-                ->first();
-
-                //enviando credenciales estaticas para las pruevas
-                $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
-                //$token = request()->bearerToken();
-                $url = self::_API . 'servicio/sincronizacionsiat';
-                $data = array(
-                    'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-                    'tnTipo' => $tnTipo
-                );
-                $header=[
-                        'Accept'        => 'application/json',
-                        'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
-                        ];
-                $response = $client->post($url, ['headers' => $header,
-                                                    'json' => $data]);
-                $result = json_decode($response->getBody()->getContents());
-            //            $result=$result->values;
-                if($result->values==null){
-                    $this->reconecTokenReturn();
+                $oUserApiToken = TokenServicio::where('Empresa', $tnEmpresa)->first();
+                if($oUserApiToken){
+                    //enviando credenciales estaticas para las pruevas
+                    $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
+                    $url = self::_API . 'servicio/sincronizacionsiat';
+                    $data = array(
+                        'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+                        'tnTipo' => $tnTipo
+                    );
+                    $header=[
+                            'Accept'        => 'application/json',
+                            'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
+                            ];
+                    $response = $client->post($url, ['headers' => $header,
+                                                        'json' => $data]);
+                    $result = json_decode($response->getBody()->getContents());
+                //    $result=$result->values;
                 }
-            } while ($result->values==null);
+                if(($result===null)||($result->values === null)){
+                    $tieneToken = $this->reconecTokenReturn($tnEmpresa);
+                    if(($tieneToken['error']==1)){
+                        $tnEmpresa=1;
+                    }
+                }
+            } while (($result===null)||($result->values === null));
             return response()->json($result->values);
 
         }catch (\Exception $e) {

@@ -17,5 +17,6 @@ class TokenServicio extends Model
         'TokenService',
         'TokenSecret',
         'TokenBearer',
+        'Empresa',
     ];
 }
