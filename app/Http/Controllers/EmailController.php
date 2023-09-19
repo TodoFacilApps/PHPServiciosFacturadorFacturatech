@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Mail\DemoEmail;
 use Illuminate\Support\Facades\Mail;
-
+use App\Mail\MiCorreo;
 
 class EmailController extends Controller
 {
@@ -35,4 +35,12 @@ class EmailController extends Controller
         return 'mensaje enviado ';
     }
 
+    public function prueva(){
+        $nombreUsuario = 'Juan'; // Nombre del usuario
+        $mensajePersonalizado = '¡Bienvenido a nuestro sitio web! Esperamos que disfrutes de tu experiencia.';
+
+        $mail = new MiCorreo($nombreUsuario, $mensajePersonalizado);
+        Mail::to('leonardo.ayala@pagofacil.com.bo')->send($mail);
+//        return response()->json($mail);
+    }
 }

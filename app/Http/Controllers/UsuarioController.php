@@ -3,20 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Usuario;
-use App\Models\Empresa;
-use App\Models\EmpresaUsuarioPersonal;
 use App\Models\User;
+use App\Models\Empresa;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Models\EmpresaUsuarioPersonal;
+use App\Modelos\mPaquetePagoFacil;
+//use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-
-use App\Modelos\mPaquetePagoFacil;
 use Illuminate\Support\Facades\DB;
 
+
+
+use App\Http\Controllers\Controller;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UsuarioController extends Controller
 {
@@ -33,7 +37,7 @@ class UsuarioController extends Controller
         ]);
 
         // Crear el nuevo usuario
-        $user = new Usuario();
+        $user = new User();
         $user->email = $credentials['email'];
         $user->password = Hash::make($credentials['password']);
         $user->Correo = $credentials['Correo'];
@@ -61,7 +65,7 @@ class UsuarioController extends Controller
 
 
         // Crear el nuevo usuario
-        $user = new Usuario();
+        $user = new User();
         $user->email = $credentials['email'];
         $user->password = Hash::make($credentials['password']);
         $user->Correo = $credentials['Correo'];
@@ -102,7 +106,6 @@ class UsuarioController extends Controller
         }
 
         $token->save();
-        $user->api_token = $token->id;
         $user->save();
 
 
@@ -218,7 +221,7 @@ class UsuarioController extends Controller
 
     public function update(Request $request,$tnVenta)
     {
-        $recurso = Usuario::find($tnVenta);
+        $recurso = User::find($tnVenta);
         $recurso->update($request->all());
         $recurso->save();
 
@@ -265,7 +268,7 @@ class UsuarioController extends Controller
         }
 
         #Update the new Password
-        Usuario::whereId(auth()->user()->id)->update([
+        User::whereId(auth()->user()->id)->update([
             'password' => Hash::make($request->tcNueva)
         ]);
 
@@ -286,10 +289,3 @@ class UsuarioController extends Controller
 
     }
 }
-/*
-
-mis facturaws
-productos
-catalogo
-
-*/

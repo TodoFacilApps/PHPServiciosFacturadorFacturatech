@@ -41,18 +41,6 @@ class HomeController extends Controller
 
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
-        // primer caso
-        $loProducto = Producto::select(\DB::raw('COUNT(*) as CantidadProducto'))
-        ->where('Estado', 1)
-        ->where('Empresa', $oEmpresas[0]->Empresa)
-        ->first();
-        $cantidadProductos;
-        //cantidad de productos registrados y sincronizados con siat
-        if ($loProducto) {
-            $cantidadProductos = $loProducto->cantidadproducto;
-        } else {
-            $cantidadProductos = 0; // Si no se encuentra ningún producto, establece la cantidad en 0
-        }
         //segundo caso ventas por sucursal por tres meses
         $fechaActual = Carbon::now();
         $fechaTresMesesAntes = $fechaActual->copy();
@@ -71,6 +59,45 @@ class HomeController extends Controller
 
 
         $ldPrimeroMes = Carbon::now()->firstOfMonth();
+        $loVentaConFacturaPendiente;
+        $loVentaConFacturaValidas;
+        $loVentaConFacturaAnuladas;
+        $loVentaConFacturaObservadas;
+        $loVentaConFacturaRechazadas;
+
+        $anEstadosSiat = [1,2,3,4,5];
+        foreach ($anEstadosSiat as $item) {
+            $consulta = Venta::select('VENTA.Fecha' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
+            ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
+            ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
+
+            ->whereBetween('VENTA.Fecha', [$ldPrimeroMes, $fechaActual])
+            ->whereIn('VENTA.Venta', function($query) use ($item) {
+                $query->select('Venta')
+                ->from('VENTAFACTURA')
+                ->where('EstadoSiat', $item);
+                })
+            ->groupBy('VENTA.Fecha')
+            ->get();
+
+            switch($item){
+                case 1:
+                    $loVentaConFacturaPendiente =$consulta;
+                    break;
+                case 2:
+                    $loVentaConFacturaValidas =$consulta;
+                    break;
+                case 3:
+                    $loVentaConFacturaAnuladas =$consulta;
+                    break;
+                case 4:
+                    $loVentaConFacturaObservadas =$consulta;
+                    break;
+                case 5:
+                    $loVentaConFacturaRechazadas =$consulta;
+                    break;
+            }
+        }
 
         $loVentaConFactura = Venta::select('VENTA.Fecha' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
             ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
@@ -104,10 +131,14 @@ class HomeController extends Controller
         $oPaquete->message = "ejecusion sin inconvenientes";
         $oPaquete->values = [
             $oEmpresas,
-            $cantidadProductos,
             $loVentaSucursal,
             $loEvolucionVentas,
             $loVentaSinFactura,
+            $loVentaConFacturaPendiente,
+            $loVentaConFacturaValidas,
+            $loVentaConFacturaAnuladas,
+            $loVentaConFacturaObservadas,
+            $loVentaConFacturaRechazadas,
             $loVentaConFactura];
         //notas de ventas realizadad por tres meces
         return response()->json($oPaquete);

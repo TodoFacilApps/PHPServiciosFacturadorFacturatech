@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('UNIDADMEDIDA', function (Blueprint $table) {
             $table->id('UnidadMedida');
+            $table->integer('Empresa');
             $table->integer('Codigo')->nullable();
             $table->string('Descripcion', 100)->nullable();
             $table->string('Abreviatura', 5)->nullable();
             $table->integer('Usr')->default(1)->nullable();
             $table->date('UsrFecha')->nullable();
             $table->string('UsrHora', 10)->nullable();
-            $table->timestamps(); // Agrega los campos created_at y updated_at
             $table->unique('Codigo');
         });
     }

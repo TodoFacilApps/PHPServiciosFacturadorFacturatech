@@ -13,6 +13,7 @@ class UnidadMedida extends Model
     protected $primaryKey = 'UnidadMedida';
     public $timestamps = false;
     protected $fillable = [
+        'Empresa',
         'Codigo',
         'Descripcion',
         'Abreviatura',

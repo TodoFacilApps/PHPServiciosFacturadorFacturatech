@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('CLIENTE', function (Blueprint $table) {
             $table->id('Cliente');
             $table->integer('Empresa');
+            $table->integer('TipoCliente');
             $table->integer('CodigoCliente');
             $table->string('RazonSocial');
             $table->integer('TipoDocumento');

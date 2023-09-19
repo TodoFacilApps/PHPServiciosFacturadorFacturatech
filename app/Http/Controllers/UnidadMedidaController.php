@@ -6,6 +6,13 @@ use App\Models\UnidadMedida;
 use Illuminate\Http\Request;
 use App\Modelos\mPaquetePagoFacil;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+use App\Http\Controllers\UsuarioEmpresaController;
+use App\Http\Controllers\SincronizacionSiatController;
+
+
 class UnidadMedidaController extends Controller
 {
     /**
@@ -20,14 +27,30 @@ class UnidadMedidaController extends Controller
     {
         //
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
-        $oUnidadMedida = UnidadMedida::all();
 
+        $oUnidadMedida = UnidadMedida::all();
+        $oUser = auth()->user();
+        $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
+        ->join('EMPRESA as e', 'e.Empresa', '=', 'um.Empresa')
+        ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+        ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+        ->where('u.Usuario', $oUser->Usuario)
+        ->select('um.*')
+        ->get();
+
+        $empresasController = new UsuarioEmpresaController();
+        $oEmpresas = $empresasController->misEmpresasReturn();
+        $sincSiatController = new SincronizacionSiatController();
+        $oUnidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,18);
+        if($oUnidad){
+            $oUnidad =$oUnidad->original->RespuestaListaParametricas->listaCodigos;
+        }
 
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = $oUnidadMedida ;
+        $oPaquete->values = [$oUnidadMedida,$oEmpresas,$oUnidad,$oUser->EmpresaSeleccionada] ;
         return response()->json($oPaquete);
     }
 
@@ -53,8 +76,10 @@ class UnidadMedidaController extends Controller
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
         $request->validate([
-            'Descripcion' => 'required',
-            'Estado' => 'nullable',
+            'Empresa' => 'required',
+            'CodigoUnidadMedida' => 'nullable',
+            'Descripcion' => 'nullable',
+            'Abreviatura' => 'nullable',
         ]);
 
         $oUnidadMedida = UnidadMedida::where('Descripcion', $request->Descripcion)->get();
@@ -69,15 +94,27 @@ class UnidadMedidaController extends Controller
                 return response()->json($oPaquete);
         }else{
             $oUnidadMedida = UnidadMedida::create([
+                'Empresa' => $request->Empresa,
+                'Codigo' => $request->Codigo,
                 'Descripcion' => $request->Descripcion,
-                'Estado' => 1,
+                'Abreviatura' => $request->Abreviatura,
             ]);
+
+            $oUser = auth()->user();
+            $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
+            ->join('EMPRESA as e', 'e.Empresa', '=', 'um.Empresa')
+            ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+            ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+            ->where('u.Usuario', $oUser->Usuario)
+            ->select('um.*')
+            ->get();
+
 
             $oPaquete->error = 0; // Error Generico
             $oPaquete->status = 1; // Sucedio un error
             $oPaquete->messageSistema = "Unidad de Medida creada";
             $oPaquete->message = "se creo la Unidad de Medida";
-            $oPaquete->values = $oUnidadMedida;
+            $oPaquete->values = [$oUnidadMedida];
             return response()->json($oPaquete);
         }
     }

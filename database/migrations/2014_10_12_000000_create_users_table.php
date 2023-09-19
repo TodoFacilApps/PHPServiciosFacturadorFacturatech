@@ -4,12 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('USUARIO', function (Blueprint $table) {
             $table->id('Usuario');
@@ -24,15 +26,17 @@ return new class extends Migration
             $table->date('UsrFecha')->nullable();
             $table->string('UsrHora', 12)->nullable();
             $table->rememberToken();
-            $table->unique('Correo');
+            $table->integer('EmpresaSeleccionada')->nullable()->default(null);
             });
-        }
+    }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('USUARIO');
+        Schema::dropIfExists('users');
     }
-};
+}

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('Empresa')->unsigned();
             $table->integer('Serial')->unsigned();
             $table->integer('Usuario')->nullable();
+            $table->integer('Sucursal')->nullable();
             $table->integer('Estado')->nullable();
             $table->primary(['Empresa','Serial']);
             $table->index('Empresa');

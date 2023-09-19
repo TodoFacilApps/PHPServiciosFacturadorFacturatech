@@ -385,7 +385,8 @@ class VentaController extends Controller
                 if($request->tnSucursal == 0){
 
                     $oVenta = DB::table('VENTA as v')
-                    ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.RazonSocial as Cliente')
+                    ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','p.CodigoSucursal as PuntoVenta','c.RazonSocial as Cliente')
+                    ->join('PUNTOVENTA as p', 'v.PuntoVenta', '=', 'p.PuntoVenta')
                     ->join('CLIENTE as c', 'v.Cliente', '=', 'c.CodigoCliente')
                     ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
                     ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
@@ -396,7 +397,8 @@ class VentaController extends Controller
                 }else{
                     if($request->tnPuntoVenta == 0){
                         $oVenta = DB::table('VENTA as v')
-                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.RazonSocial as Cliente')
+                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','p.CodigoSucursal as PuntoVenta','c.RazonSocial as Cliente')
+                        ->join('PUNTOVENTA as p', 'v.PuntoVenta', '=', 'p.PuntoVenta')
                         ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
                         ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
                         ->join('CLIENTE as c', 'v.Cliente', '=', 'c.CodigoCliente')
@@ -410,10 +412,12 @@ class VentaController extends Controller
 
                         // queda pendiente lo del punto de venta
                         $oVenta = DB::table('VENTA as v')
-                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','c.RazonSocial as Cliente')
+                        ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','p.CodigoSucursal as PuntoVenta','c.RazonSocial as Cliente')
+                        ->join('PUNTOVENTA as p', 'v.PuntoVenta', '=', 'p.PuntoVenta')
                         ->join('CLIENTE as c', 'v.Cliente', '=', 'c.CodigoCliente')
                         ->join('EMPRESA as em', 'v.Empresa', '=', 'em.Empresa')
                         ->join('EMPRESASUCURSAL as es', 'v.Sucursal', '=', 'es.Sucursal')
+                        ->where('p.PuntoVenta', $request->tnPuntoVenta)
                         ->where('v.Empresa', $request->tnEmpresa)
                         ->where('v.Sucursal',$request->tnSucursal)
                         ->whereBetween('v.Fecha', [$request->tdFInicio, $request->tdFFin])
@@ -474,7 +478,6 @@ class VentaController extends Controller
                     $oPaquete->message = 'la nota de venta ya cuenta con una Factura ';
                 }else{
                     $oCliente = Cliente::where('CodigoCliente',$oVenta->Cliente)->first();
-
                     $lnCodexcepci = $this->validarNitCliente($oCliente);
                     // Realiza las acciones necesarias con $lnCodexcepci
                     $lcNumeroTarjeta = null;
@@ -484,6 +487,7 @@ class VentaController extends Controller
 
                     $horaActual = Carbon::now();
                     $oSucursal = EmpresaSucursal::where('Sucursal',$oVenta->Sucursal)->first();
+                    $oPuntoVenta = PuntoVenta::where('PuntoVenta',$oVenta->PuntoVenta)->first();
 
                     if($request->tdFechaEmision === null){
                         $request->tdFechaEmision = $horaActual->format('Y-m-d');
@@ -501,7 +505,7 @@ class VentaController extends Controller
                         'ValidoSin' => 1,
                         'Moneda' => $oVenta->Moneda,
                         'CodigoSucursal' => $oSucursal->CodigoSucursal,
-                        'CodigoPuntoVenta' => $oVenta->PuntoVenta,
+                        'CodigoPuntoVenta' => $oPuntoVenta->CodigoPuntoVenta,
                         'TipoDocumentoSector' => $request->tnTipoDocumentoSector,
                         'CodigoCliente' => $oCliente->CodigoCliente,
                         'DocumentoIdentidad' => $oCliente->TipoDocumento,

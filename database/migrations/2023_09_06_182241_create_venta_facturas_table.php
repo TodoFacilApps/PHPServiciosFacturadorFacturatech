@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('NitEmison', 20);// nit Empresa
             $table->date('FechaEmision');// fecha decha la orden de factura (tiene que reflejar la factura)
             $table->string('HoraEmision', 12); // hora de la orden de facura (tiene que reflejar la factura)
-            $table->integer('ValidoSin')->length(1)->default(1);        //valor por defecto 1 = pendiente, si el emitir escorecto 2
+            $table->integer('ValidoSin')->length(1)->default(1);//valor por defecto 1 = pendiente, si el emitir escorecto 2
             $table->integer('Moneda')->length(1);  //codigo de moneda 1= bolivianos 2 = dolares
             $table->integer('CodigoSucursal')->length(10); //codigo sucursal habilitado por inpuesto
             $table->integer('CodigoPuntoVenta')->length(10);// Codigo punto de venta habilitado por impuestos
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('CodigoCliente', 100);          //Codigo del cliente registrado por la empresa
             $table->integer('DocumentoIdentidad')->length(2);     //Tipo de documento del Cliente
             $table->string('NumeroDocumento', 20);               // Numero de documento del Cliente
-            $table->string('Complemento', 5);            // Complemento del documento del cliente
+            $table->string('Complemento', 5)->nullable();            // Complemento del documento del cliente
             $table->integer('Codexcepci')->length(1);       // por default 0 pero si el documeto es nit => consultar a impuesto si es valido colocar  0 y si es invalido colocar 1
             $table->string('RazonSocial', 200);          // Nombre o Razon Social del Cliente
             $table->string('Email', 254);               //Email del Cliente
