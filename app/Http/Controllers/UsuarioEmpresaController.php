@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Usuario;
 use App\Models\Pais;
 use App\Models\Empresa;
 use App\Models\EmpresaUsuarioPersonal;
@@ -76,15 +75,10 @@ class UsuarioEmpresaController extends Controller
      */
     public function misEmpresas(Request $request)
     {
-        $oUser = $request->user();
-        /*
-        $credentials = $request->validate([
-            'Usuario' => 'required',
-        ]);
-        */
-
+        $oUser = auth()->user();
         // Crear el nuevo usuario
-        $oUser = Usuario::find($oUser['Usuario']);
+        $oUser = User::find($oUser->Usuario);
+
         if(is_null($oUser)){
             return response()->json([
                 'error' => 0,

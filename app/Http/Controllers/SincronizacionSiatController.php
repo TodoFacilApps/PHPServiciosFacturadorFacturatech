@@ -360,5 +360,53 @@ class SincronizacionSiatController extends Controller
         }
     return $oUser;
     }
+    public function ValidacionNitReturn($tnEmpresa, $tnNitVerificacion){
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        try{
+            $oAsociacion = Asociacion::where('Empresa', $tnEmpresa)
+            ->where('CodigoAmbiente', 1)
+            ->get();
+
+            $result =null;
+            do{
+                $oUserApiToken = TokenServicio::where('Empresa', $tnEmpresa)->first();
+                if($oUserApiToken){
+                    //enviando credenciales estaticas para las pruevas
+                    $client = new Client(['headers' => ['X-Foo' => 'Bar']]);
+                    $url = self::_API . 'servicio/verificarnit';
+                    $data = array(
+                        'tcCredencial' => $oAsociacion[0]->AsociacionCredencial, //'4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+                        'tnNitVerificacion' => $tnNitVerificacion
+                    );
+                    $header=[
+                            'Accept'        => 'application/json',
+                            'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
+                            ];
+                    $response = $client->post($url, ['headers' => $header,
+                                                        'json' => $data]);
+                    $result = json_decode($response->getBody()->getContents());
+                //    $result=$result->values;
+                }
+                if(($result===null)||($result->values === null)){
+                    $tieneToken = $this->reconecTokenReturn($tnEmpresa);
+                    if(($tieneToken['error']==1)){
+                        $tnEmpresa=1;
+                    }
+                }
+            } while (($result===null)||($result->values === null));
+            return response()->json($result->values->RespuestaVerificarNit);
+
+        }catch (\Exception $e) {
+            DB::rollback(); // Revertir la transacción en caso de error
+
+            // Aquí puedes manejar el error y devolver una respuesta adecuada
+            $oPaquete->error = 1; // Indicar que hubo un error
+            $oPaquete->status = 0; // Indicar que hubo un error
+            $oPaquete->messageSistema = "Error en el proceso";
+            $oPaquete->message = $e->getMessage(); // Agregar detalles del error
+            return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
+        }
+    return $oUser;
+    }
 
 }

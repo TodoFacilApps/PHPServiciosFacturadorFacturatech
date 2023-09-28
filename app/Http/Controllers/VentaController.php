@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\TokenServicio;
 use App\Models\claseSiat;
 use App\Models\Movimineto;
+use App\Models\UnidadMedida;
+use App\Models\TipoCliente;
 use Carbon\Carbon;
 use App\Http\Controllers\SincronizacionSiatController;
 use App\Http\Controllers\UsuarioEmpresaController;
@@ -181,32 +183,25 @@ class VentaController extends Controller
         try{
             $empresasController = new UsuarioEmpresaController();
             $oEmpresas = $empresasController->misEmpresasReturn();
-
-            $oEmpresaSucursal;
-            $oPuntoVenta;
-            if($oEmpresas){
-                $oEmpresaSucursal = EmpresaSucursal::where('Empresa', $oEmpresas[0]->Empresa)
-                ->where('Estado',1)->get();
-
-                if($oEmpresaSucursal){
-                    $oPuntoVenta = DB::table('PUNTOVENTA')
-                        ->join('EMPRESASUCURSAL', 'PUNTOVENTA.Sucursal', '=', 'EMPRESASUCURSAL.Sucursal')
-                        ->where('EMPRESASUCURSAL.Empresa', $oEmpresas[0]->Empresa)
-                        ->where('PUNTOVENTA.Estado', 1)
-                        ->select('PUNTOVENTA.*')
-                        ->get();
-                }
+            $oUser = auth()->user();
+            $lnEmpresaSeleccionada =$oUser->EmpresaSeleccionada;
+            if($lnEmpresaSeleccionada === 0){
+                $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
             }
             $sincSiatController = new SincronizacionSiatController();
-            $oUnidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,18);
-            $oProducto = Producto::where('Empresa',$oEmpresas[0]->Empresa)
+            $oUnidad = UnidadMedida::where('Empresa',$lnEmpresaSeleccionada)
+            ->get();
+
+            $oProducto = Producto::where('Empresa',$lnEmpresaSeleccionada)
             ->where('Estado',1)->get();
-            $oClientes = Cliente::where('Empresa',$oEmpresas[0]->Empresa)->get();
+
+            $oClientes = Cliente::where('Empresa',$lnEmpresaSeleccionada)
+            ->get();
 
             $consultaController = new ConsultaController();
-            $oTipoDocumentoSector = $consultaController->empresaTipoDocumentoSector( $oEmpresas[0]->Empresa);
+            $oTipoDocumentoSector = $consultaController->empresaTipoDocumentoSector( $lnEmpresaSeleccionada);
 
-            $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
+            $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,10);
             $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
             $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
             return [
@@ -216,14 +211,27 @@ class VentaController extends Controller
                 },
                 $oTipoDocumentoIdentidad);
 
-            $oDescuento = Descuento::where('Empresa',$oEmpresas[0]->Empresa)
+            $oDescuento = Descuento::where('Empresa',$lnEmpresaSeleccionada)
             ->where('Estado',1)->get();
+
+            $oTipoCliente = TipoCliente::where('Empresa',$lnEmpresaSeleccionada)
+            ->get();
 
             $oPaquete->error = 0;
             $oPaquete->status = 1;
             $oPaquete->messageSistema = "sin errores";
             $oPaquete->message = 'comando ejecutado';
-            $oPaquete->values = [$oEmpresas,$oEmpresaSucursal,$oPuntoVenta,$oUnidad,$oProducto,$oClientes,$oTipoDocumentoSector,$oTipoDocumentoIdentidad,$oDescuento];
+            $oPaquete->values = [
+                $oEmpresas,
+                $oUnidad,
+                $oProducto,
+                $oClientes,
+                $oTipoDocumentoSector,
+                $oTipoDocumentoIdentidad,
+                $oDescuento,
+                $lnEmpresaSeleccionada,
+                $oTipoCliente,
+            ];
             return response()->json($oPaquete);
         }catch (\Exception $e) {
             DB::rollback(); // Revertir la transacción en caso de error
@@ -407,7 +415,6 @@ class VentaController extends Controller
                         ->whereBetween('v.Fecha', [$request->tdFInicio, $request->tdFFin])
                         ->get();
 
-
                     }else{
 
                         // queda pendiente lo del punto de venta
@@ -572,7 +579,6 @@ class VentaController extends Controller
             return response()->json($oPaquete);
 
         }catch (\Exception $e) {
-
             $oPaquete->error = 1; // Indicar que hubo un error
             $oPaquete->status = 0; // Indicar que hubo un error
             $oPaquete->messageSistema = "Error en el proceso";

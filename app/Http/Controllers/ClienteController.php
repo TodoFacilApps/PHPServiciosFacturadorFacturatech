@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 
+use App\Models\TipoCliente;
 use App\Models\Cliente;
 use App\Models\EmpresaUsuarioPersonal;
 use App\Models\TokenServicio;
@@ -31,7 +32,7 @@ class ClienteController extends Controller
 {
     //
 
-        /**
+    /**
      * Mostrar una lista del recurso.
      * @metodo index()
      * @autor   jakeline
@@ -54,6 +55,7 @@ class ClienteController extends Controller
 
         $sincSiatController = new SincronizacionSiatController();
         $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
+
         $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
         $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
         return [
@@ -65,13 +67,26 @@ class ClienteController extends Controller
 
         $oDescuento = Descuento::where('Empresa',$oEmpresas[0]->Empresa)
         ->where('Estado',1)->get();
+        $oUser = auth()->user();
+        $oTipoCliente = DB::table('TIPOCLIENTE as tc')
+        ->join('EMPRESA as e', 'e.Empresa', '=', 'tc.Empresa')
+        ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+        ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+        ->where('u.Usuario', $oUser->Usuario)
+        ->select('tc.*')
+        ->get();
 
 
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = [$oEmpresas,$oClientes,$oTipoDocumentoIdentidad] ;
+        $oPaquete->values = [
+            $oEmpresas,
+            $oClientes,
+            $oTipoDocumentoIdentidad,
+            $oTipoCliente,
+            $oUser->Usuario];
         return response()->json($oPaquete);
     }
 
@@ -90,6 +105,7 @@ class ClienteController extends Controller
           DB::beginTransaction(); // Iniciar la transacción
           $request->validate([
                 'tnEmpresa'=> 'required',
+                'tnTipoCliente'=> 'required',
                 'tcRazonSocial'=> 'required',
                 'tnTipoDocumento'=> 'required',
                 'tcDocumento'=> 'required',
@@ -103,9 +119,10 @@ class ClienteController extends Controller
             $oUser = Auth::user();
             $empresasController = new UsuarioEmpresaController();
             if($empresasController->esMiEmpresa($request->tnEmpresa)==1){
-
-                $oCliente = Cliente::where('TipoDocumento',$request->tcDocumento)
+                $oCliente = Cliente::where('TipoDocumento',$request->tnTipoDocumento)
+                ->where('Empresa',$request->tnEmpresa)
                 ->where('Documento',$request->tcDocumento)->exists();
+
                 if($oCliente){
                     $oPaquete->error = 1; // Error Generico
                     $oPaquete->status = 0; // Sucedio un error
@@ -113,14 +130,31 @@ class ClienteController extends Controller
                     $oPaquete->message = "el documento del cliente ya a sido registrado anteriormente";
                     $oPaquete->values = null;
                 }else{
-                    $oInput = $this->valueTClienteToCliente($request);
-                    $oCliente = Cliente::create($oInput);
+                    $oTipoCliente=Tipocliente::where('Empresa',$request->tnEmpresa)
+                            ->where('TipoCliente',$request->tnTipoCliente)
+                            ->count();
+                    if($oTipoCliente>0){
+                        $oInput = $this->valueTClienteToCliente($request);
 
-                    $oPaquete->error = 0; // Error Generico
-                    $oPaquete->status = 1; // Sucedio un error
-                    $oPaquete->messageSistema = "comando ejecutado";
-                    $oPaquete->message = "cliente registrado";
-                    $oPaquete->values = $oCliente;
+                        $oCliente = Cliente::create($oInput);
+                        if($oCliente->Complemento){
+                            $oCliente->CodigoCliente = $oCliente->Documento.$oCliente->Complemento;
+                        }
+                        $oCliente->save();
+
+                        $oPaquete->error = 0; // Error Generico
+                        $oPaquete->status = 1; // Sucedio un error
+                        $oPaquete->messageSistema = "comando ejecutado";
+                        $oPaquete->message = "cliente registrado";
+                        $oPaquete->values = $oCliente;
+
+                    }else{
+                        $oPaquete->error = 1; // Error Generico
+                        $oPaquete->status = 0; // Sucedio un error
+                        $oPaquete->messageSistema = "comando ejecutado";
+                        $oPaquete->message = "Tipo de Cliente no habilitado para la Empresa";
+                        $oPaquete->values = null;
+                    }
                 }
                 DB::commit(); // Confirmar la transacción si todo va bien
             }else{
@@ -159,11 +193,16 @@ class ClienteController extends Controller
 
         $oCliente = Cliente::find($tnCliente);
 
+        $oTipoCliente = TipoCliente::find($oCliente->TipoCliente);
+        $oCliente->TipoCliente =$oTipoCliente->Descripcion;
+        $oClienteEmpresa =$oCliente->empresa->Nombre;
+        $oCliente->Empresa =$oClienteEmpresa;
+
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = [$oEmpresas,$oCliente] ;
+        $oPaquete->values = $oCliente ;
         return response()->json($oPaquete);
 
     }
@@ -235,6 +274,26 @@ class ClienteController extends Controller
         }
     }
 
+    public function clientesValidarNit(Request $request)
+    {
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        $request->validate([
+            'tnEmpresa'=> 'required',
+            'tnNit'=> 'required',
+        ]);
+
+        $SincronizacionSiatController = new SincronizacionSiatController();
+        $result = $SincronizacionSiatController->ValidacionNitReturn($request->tnEmpresa,$request->tnNit);
+
+        //respuesta de confirmacion
+        $oPaquete->error = 0; // Error Generico
+        $oPaquete->status = 1; // Sucedio un error
+        $oPaquete->message = "comando ejecutado";
+        $oPaquete->values = $result->original;
+        return response()->json($oPaquete);
+
+    }
+
     public function optenerClientes(Request $request)
     {
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
@@ -257,18 +316,66 @@ class ClienteController extends Controller
     public function valueTClienteToCliente(Request $request){
         return [
             'Empresa'=> $request->tnEmpresa,
+            'TipoCliente'=> $request->tnTipoCliente,
             'CodigoCliente'=> $request->tcDocumento,
             'RazonSocial'=> $request->tcRazonSocial,
             'TipoDocumento'=> $request->tnTipoDocumento,
             'Documento'=> $request->tcDocumento,
             'Complemento'=> $request->tcComplemento,
-            'NitEspecial'=> $request->tcNitEspecial,
             'Email'=> $request->tcEmail,
             'Telefono'=> $request->tcTelefono,
-            'Usr' =>Auth::user()->Usuairo,
+            'Usr' =>Auth::user()->Usuario,
             'UsrFecha' => Carbon::now()->toDateString(),
             'UsrHora' =>  Carbon::now()->toTimeString()
         ];
     }
 
+    public function editar(Request $request)
+    {
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        $request->validate([
+            'tnCliente'=> 'required',
+        ]);
+        $empresasController = new UsuarioEmpresaController();
+        $oEmpresas = $empresasController->misEmpresasReturn();
+
+        $oCliente ;
+        if($oEmpresas){
+            $oCliente = Cliente::find($request->tnCliente);
+        }
+
+        $sincSiatController = new SincronizacionSiatController();
+        $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
+
+        $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
+        $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
+        return [
+                    'Tipo' => $oTipoDocumentoIdentidad->codigoClasificador,
+                    'Nombre' => $oTipoDocumentoIdentidad->descripcion,
+                ];
+            },
+            $oTipoDocumentoIdentidad);
+
+        $oUser = auth()->user();
+        $oTipoCliente = DB::table('TIPOCLIENTE as tc')
+        ->join('EMPRESA as e', 'e.Empresa', '=', 'tc.Empresa')
+        ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+        ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+        ->where('u.Usuario', $oUser->Usuario)
+        ->select('tc.*')
+        ->get();
+
+
+        $oPaquete->error = 0; // Error Generico
+        $oPaquete->status = 1; // Sucedio un error
+        $oPaquete->messageSistema = "comando ejecutado";
+        $oPaquete->message = "ejecusion sin inconvenientes";
+        $oPaquete->values = [
+            $oEmpresas,
+            $oCliente,
+            $oTipoDocumentoIdentidad,
+            $oTipoCliente,
+            $oUser->Usuario];
+        return response()->json($oPaquete);
+    }
 }

@@ -17,6 +17,10 @@ class CreateTipoClientesTable extends Migration
             $table->id('TipoCliente');
             $table->integer('Empresa');
             $table->string('Descripcion');
+            $table->boolean('PrecioPorMayor')->default(false);
+            $table->boolean('PrecioOferta')->default(false);
+            $table->boolean('PrecioRemate')->default(false);
+            $table->integer('Estado')->default(1);
         });
     }
 

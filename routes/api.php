@@ -22,6 +22,8 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\TipoClienteController;
+use App\Http\Controllers\EmpresaCategoriaProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,8 +84,12 @@ Route::middleware('auth:api')->group(function () {
 
     //rutas de productos o servicios
     Route:: resource( 'clientes', ClienteController::class);
+    Route:: resource( 'tipoClientes', TipoClienteController::class);
     Route:: post( 'empresa/clientes', [ClienteController::class, 'optenerClientes']);
+    Route:: post( 'clientesEditar', [ClienteController::class, 'editar']);
+    Route:: post( 'clientesValidarNit', [ClienteController::class, 'clientesValidarNit']);
     Route:: resource( 'productos', ProductoController::class);
+    Route:: resource( 'empresaCategoriaProducto', EmpresaCategoriaProductoController::class);
     Route:: post( 'productosEmpresa', [ProductoController::class, 'productosEmpresa']);
     Route:: post( 'movimientos', [ProductoController::class, 'movimientoProducto']);
     Route:: get( 'productosValores', [ProductoController::class, 'productosValores']);

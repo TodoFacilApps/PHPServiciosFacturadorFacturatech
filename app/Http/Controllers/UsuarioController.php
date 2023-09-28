@@ -204,7 +204,7 @@ class UsuarioController extends Controller
             $lcUrlLogo = $oEmpresa->UrlLogo;
             $oUser->EmpresaSeleccionada = $oEmpresa->Nombre;
         }else{
-            $lcUrlLogo =env('APP_URL') .'/imagenes/default/prodductoServicio.jpg';
+            $lcUrlLogo =env('APP_URL').env('APP_PORT').'/imagenes/default/prodductoServicio.jpg';
             $oUser->EmpresaSeleccionada ='Multiempresa';
         }
         return response()->json([

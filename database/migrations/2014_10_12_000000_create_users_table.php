@@ -18,10 +18,12 @@ class CreateUsersTable extends Migration
             $table->string('Nombre', 100)->nullable();
             $table->string('Apellido', 100)->nullable();
             $table->string('email')->unique();
-            $table->string('Correo', 150)->nullable();
+            $table->string('CorreoRespaldo', 150)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('Telefono')->nullable();
+            $table->string('Perfil')->default('normal');
+            $table->string('Estilo')->default('normal');
             $table->integer('Usr')->nullable();
             $table->date('UsrFecha')->nullable();
             $table->string('UsrHora', 12)->nullable();
@@ -37,6 +39,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('USUARIO');
     }
 }

@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('UNIDADMEDIDA', function (Blueprint $table) {
+        Schema::create('UNIDADMEDIDAEMPRESA', function (Blueprint $table) {
             $table->id('UnidadMedida');
             $table->integer('Empresa');
-            $table->integer('Codigo')->nullable();
-            $table->string('Descripcion', 100)->nullable();
-            $table->string('Abreviatura', 5)->nullable();
+            $table->integer('Codigo');
+            $table->integer('Estado');
             $table->integer('Usr')->default(1)->nullable();
             $table->date('UsrFecha')->nullable();
             $table->string('UsrHora', 10)->nullable();
-            $table->unique('Codigo');
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('UNIDADMEDIDA');
+        Schema::dropIfExists('UNIDADMEDIDAEMPRESA');
     }
 };

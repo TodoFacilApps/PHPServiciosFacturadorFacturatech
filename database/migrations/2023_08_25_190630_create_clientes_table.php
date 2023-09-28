@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id('Cliente');
             $table->integer('Empresa');
             $table->integer('TipoCliente');
-            $table->integer('CodigoCliente');
+            $table->string('CodigoCliente');
             $table->string('RazonSocial');
             $table->integer('TipoDocumento');
             $table->string('Documento');
-            $table->string('Complemento');
-            $table->string('NitEspecial')->nullable();
+            $table->string('Complemento')->nullable();
             $table->string('Telefono')->nullable();
             $table->string('Email')->nullable();
             $table->integer('Usr')->nullable()->default(1);

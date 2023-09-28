@@ -12,6 +12,7 @@ use App\Models\Movimineto;
 use App\Models\UnidadMedida;
 use App\Models\ClaseSiat;
 use App\Models\ActividadEconomica;
+use App\Models\EmpresaCategoriaProducto;
 use Illuminate\Http\Request;
 use App\Modelos\mPaquetePagoFacil;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\UsuarioEmpresaController;
 use App\Http\Controllers\SincronizacionSiatController;
+use App\Http\Controllers\ConsultaController;
 
 
 class ProductoController extends Controller
@@ -74,83 +76,96 @@ class ProductoController extends Controller
         try{
             DB::beginTransaction(); // Iniciar la transacción
 
-             if($request->tcDescripcion === null){
-                 $request->merge(['tcDescripcion' => 'SIN DESCRIPCION']);
+            if($request->tcDescripcion === null){
+                $request->merge(['tcDescripcion' => 'SIN DESCRIPCION']);
+            }
+            if($request->tcCodigoProductoOrigen === null){
+                $request->merge(['tcCodigoProductoOrigen' => '1']);
             }
             if($this->FiltrosRegistroProducto($request)){
-                $oProducto = Producto::where('CodigoProductoOrigen', $request->tcCodigoProductoOrigen)->
-                where('Empresa', $request->tnEmpresa)->get();
-
                 $lxImage;$lxImageData;$lcImagenNombre;
 
-                if (!$oProducto->isEmpty()) {
-                    $oPaquete->error = 1; // Error Generico
-                        $oPaquete->status = 0; // Sucedio un error
-                        $oPaquete->messageSistema = "Error en el proceso";
-                        $oPaquete->message = "Error Codigo del Producto Existente en la empresa ";
-                        $oPaquete->values = null;
-                        return response()->json($oPaquete);
+                $loEmpresa = Empresa::find($request->tnEmpresa);
+                $llImagen;
+                if($request->txUrlImagen){
+                    //almacenamiento del nombre de la imagen y decodificando la imagen
+                    $lxImageData = $request->input('txUrlImagen');
+                    $lxImage = base64_decode($lxImageData);
+                    $lcImagenNombre = '_' . time() . '.jpg'; // Genera un nombre único para la imagen
+                    //actualizando los valores
+                    $request->merge(['file' => $lxImage]);
+                    $request->merge(['txUrlImagen' => $lcImagenNombre]);
+                    $llImagen = true;
                 }else{
-
-                    $loEmpresa = Empresa::find($request->tnEmpresa);
-                    $llImagen;
-                    if($request->txUrlImagen){
-                        //almacenamiento del nombre de la imagen y decodificando la imagen
-                        $lxImageData = $request->input('txUrlImagen');
-                        $lxImage = base64_decode($lxImageData);
-                        $lcImagenNombre = '_' . time() . '.jpg'; // Genera un nombre único para la imagen
-                        //actualizando los valores
-                        $request->merge(['file' => $lxImage]);
-                        $request->merge(['txUrlImagen' => $lcImagenNombre]);
-                        $llImagen = true;
-                    }else{
-                        $request->merge(['txUrlImagen' => 'imagenes/default/prodductoServicio.jpg']);
-                        $llImagen = false;
-                    }
-
-                    //insercion del producto
-                    $oInput = [
-                        'Producto' => null,
-                        'TipoProducto' => $request->tnTipoProducto,
-                        'ControlaStock' => $request->tnControlaStock,
-                        'ClaseSiat' => $request->tnClaseSiat,
-                        'Empresa' => $request->tnEmpresa,
-                        'ActividadEconomica' => $request->tnActividadEconomica,
-                        'Unidad' => $request->tnUnidad,
-                        'UrlImagen' => $request->txUrlImagen,
-                        'CodigoProductoOrigen' => $request->tcCodigoProductoOrigen,
-                        'Nombre' => $request->tcNombre,
-                        'Descripcion' => $request->tcDescripcion,
-                        'Precio' => $request->tnPrecio,
-                        'CatalogoImpuestos' => $request->tnCatalogoImpuestos,
-                        'CodigoProductoEmpresa' => $request->tcCodigoProductoEmpresa,
-                        'DecimalesCantidad' => $request->tnDecimalesCantidad,
-                        'TipoProductoEmpresa' => $request->tnTipoProductoEmpresa,
-                        'Saldo' => $request->tnSaldo,
-                        'MaximoStock' => $request->tnMaximoStock,
-                        'PrecioPorMayor' => $request->tnPrecioPorMayor,
-                        'PrecioOferta' => $request->tnPrecioOferta,
-                        'PrecioRemate' => $request->tnPrecioRemate,
-                        'NumeroOpciones' => $request->tnNumeroOpciones,
-                        'Novedad' => $request->tnNovedad,
-                        'Oferta' => $request->tnOferta,
-                        'Posicion' => $request->tcPosicion,
-                        'NroVersion' => $request->tnNroVersion,
-                        'Estado' => $request->tnEstado,
-                        'Usr' => Auth::user()->Usuario,
-                        'UsrHora' => date('H:i:s'),//hora actual
-                        'UsrFecha' => date('Y-m-d'),//fecha actual
-                    ];
-                    $oProducto = Producto::create($oInput);
-                    if($llImagen){
-                        $newImageName = str_replace(' ', '_', $oProducto->Nombre);
-                        $oProducto->UrlImagen =  'imagenes/empresa/' . $loEmpresa->Empresa. '/productos/' . $oProducto->Producto . $newImageName . $lcImagenNombre;
-                        Storage::disk('public')->put($oProducto->UrlImagen, $lxImage);
-                    }
-                    $oProducto->UrlImagen = env('APP_URL') . '/' . $oProducto->UrlImagen;
-                    $oProducto->save();
-
+                    $request->merge(['txUrlImagen' => 'imagenes/default/prodductoServicio.jpg']);
+                    $llImagen = false;
                 }
+
+                //insercion del producto
+                $oInput = [
+                    'Producto' => null,
+                    'TipoProducto' => $request->tnTipoProducto,
+                    'ControlaStock' => $request->tnControlaStock,
+                    'ClaseSiat' => $request->tnClaseSiat,
+                    'Empresa' => $request->tnEmpresa,
+                    'ActividadEconomica' => $request->tnActividadEconomica,
+                    'Unidad' => $request->tnUnidad,
+                    'UrlImagen' => $request->txUrlImagen,
+                    'CodigoProductoOrigen' => $request->tcCodigoProductoOrigen,
+                    'Nombre' => $request->tcNombre,
+                    'Descripcion' => $request->tcDescripcion,
+                    'Precio' => $request->tnPrecio,
+                    'CatalogoImpuestos' => $request->tnCatalogoImpuestos,
+                    'CodigoProductoEmpresa' => $request->tcCodigoProductoEmpresa,
+                    'DecimalesCantidad' => $request->tnDecimalesCantidad,
+                    'TipoProductoEmpresa' => $request->tnTipoProductoEmpresa,
+                    'Saldo' => $request->tnSaldo,
+                    'MaximoStock' => $request->tnMaximoStock,
+                    'PrecioPorMayor' => $request->tnPrecioPorMayor,
+                    'PrecioOferta' => $request->tnPrecioOferta,
+                    'PrecioRemate' => $request->tnPrecioRemate,
+                    'NumeroOpciones' => $request->tnNumeroOpciones,
+                    'Novedad' => $request->tnNovedad,
+                    'Oferta' => $request->tnOferta,
+                    'Posicion' => $request->tcPosicion,
+                    'NroVersion' => $request->tnNroVersion,
+                    'Estado' => $request->tnEstado,
+                    'Usr' => Auth::user()->Usuario,
+                    'UsrHora' => date('H:i:s'),//hora actual
+                    'UsrFecha' => date('Y-m-d'),//fecha actual
+                ];
+
+                //Generacion de una nueva  serie vasado en un codigo
+                $producto = Producto::where('CodigoProductoOrigen', 'like', $oInput['CodigoProductoOrigen'] . '%')
+                        ->where('CodigoProductoOrigen', 'NOT LIKE', $oInput['CodigoProductoOrigen'].'%-%')
+                        ->latest('CodigoProductoOrigen')
+                        ->first();
+
+                if($producto){
+                    $cadenaUltimoCodigo = explode("-", $producto->CodigoProductoOrigen);
+                    $lSerie =end($cadenaUltimoCodigo);
+                    $producto = intval($lSerie);
+                }else{
+                    $producto = 0;
+                }
+                $producto =sprintf("%04d", ($producto + 1));
+
+                if (strpos($oInput['CodigoProductoOrigen'], '-') !== false) {
+                    $oInput['CodigoProductoOrigen'] = $oInput['CodigoProductoOrigen'].$producto;
+                } else {
+                    $oInput['CodigoProductoOrigen'] = $producto;
+                }
+                //fin del generador de codigo
+
+                $oProducto = Producto::create($oInput);
+                if($llImagen){
+                    $newImageName = str_replace(' ', '_', $oProducto->Nombre);
+                    $oProducto->UrlImagen =  'imagenes/empresa/' . $loEmpresa->Empresa. '/productos/' . $oProducto->Producto . $newImageName . $lcImagenNombre;
+                    Storage::disk('public')->put($oProducto->UrlImagen, $lxImage);
+                }
+                $oProducto->UrlImagen = env('APP_URL') . '/' . $oProducto->UrlImagen;
+                $oProducto->save();
+
                 $oPaquete->error = 0; // Error Generico
                 $oPaquete->status = 1; // Sucedio un error
                 $oPaquete->messageSistema = "codigo ejecutado";
@@ -382,12 +397,11 @@ class ProductoController extends Controller
         //        return $request;
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
-        $oEmpresaSeleccionada = $request->tcEmpresa;
+        $oEmpresaSeleccionada = $request->tnEmpresa;
 
-        // return Auth::user()->EmpresaSeleccionada;
         $oProducto = DB::table('PRODUCTO as p')
         ->select('p.*', 'um.Descripcion as Unidad')
-        ->join('UNIDADMEDIDA as um', 'p.Unidad', '=', 'um.UnidadMedida')
+        ->join('UNIDADMEDIDA as um', 'p.Unidad', '=', 'um.Codigo')
         ->where('p.Empresa', $oEmpresaSeleccionada)
         ->where('p.Estado', 1)
         ->orderBy('p.CodigoProductoOrigen')
@@ -419,29 +433,27 @@ class ProductoController extends Controller
         try{
 
             $oClaseSiat = ClaseSiat::all();
-
-            $oEmpresas = Empresa::select('EMPRESA.*')
-            ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
-            ->leftJoin('USUARIO', 'EMPRESAUSUARIOPERSONAL.Usuario', '=', 'USUARIO.Usuario')
-            ->where('USUARIO.Usuario', '=', $oUser->Usuario)
-            ->where('EMPRESAUSUARIOPERSONAL.Estado', '=', 1 )
-            ->orderBy('EMPRESA.Empresa', 'asc')
+            $oEmpresaCategoriaProd = DB::table('EMPRESACATEGORIAPRODUCTO as ecp')
+            ->join('EMPRESA as e', 'e.Empresa', '=', 'ecp.Empresa')
+            ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+            ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+            ->where('u.Usuario', $oUser->Usuario)
+            ->select('ecp.*')
             ->get();
 
-            $oUserApiToken = TokenServicio::where('Empresa', $oEmpresas[0]->Empresa)
-            ->first();
+
+            $empresasController = new UsuarioEmpresaController();
+            $oEmpresas = $empresasController->misEmpresasReturn();
 
             $oActividadEconomica;
             $oUnidadMedida;
             $oCatalogoIm;
-
             if(!$oEmpresas->isEmpty()){
-                $tnActividades = [1,6,18];
+                $tnActividades = [1,6];
                 $lnEmpresa = $oEmpresas[0]->Empresa;
                 foreach ($tnActividades as $tnActividad) {
                     $sincSiatController = new SincronizacionSiatController();
                     $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresa,$tnActividad);
-
                     switch ($tnActividad) {
                         case 1:
                             $oActividadEconomica = $result->original;
@@ -450,16 +462,9 @@ class ProductoController extends Controller
                         case 6:
                             $oCatalogoIm = $result->original;
                             break;
-
-                        case 18:
-                            $oUnidadMedida = $result->original;
-                            break;
-
-                        default:
-                            # code...
-                            break;
                     }
                 }
+                $oUnidadMedida = UnidadMedida::where('Empresa',$lnEmpresa)->get();
             }else{
                 echo('no hay empresas');
             }
@@ -469,7 +474,14 @@ class ProductoController extends Controller
             $oPaquete->status = 1; //
             $oPaquete->messageSistema = "comando ejecutado";
             $oPaquete->message = "ejecusion sin inconvenientes";
-            $oPaquete->values = [$oEmpresas,$oClaseSiat, $oActividadEconomica, $oCatalogoIm, $oUnidadMedida] ;
+            $oPaquete->values = [
+                $oEmpresas,
+                $oClaseSiat,
+                $oActividadEconomica,
+                $oCatalogoIm,
+                $oUnidadMedida,
+                $oEmpresaCategoriaProd
+                ] ;
             return response()->json($oPaquete);
         }catch (\Exception $e) {
             DB::rollback(); // Revertir la transacción en caso de error

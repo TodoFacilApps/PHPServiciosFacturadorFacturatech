@@ -20,9 +20,7 @@ return new class extends Migration
             $table->primary(['Empresa','Serial']);
             $table->index('Empresa');
             $table->index('Usuario');
-            $table->foreign('Empresa')->references('Empresa')->on('EMPRESA')
-                            ->onDelete('cascade')
-                            ->onUpdate('cascade');
+
         });
     }
     /**

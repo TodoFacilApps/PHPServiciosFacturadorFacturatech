@@ -50,7 +50,12 @@ class UnidadMedidaController extends Controller
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = [$oUnidadMedida,$oEmpresas,$oUnidad,$oUser->EmpresaSeleccionada] ;
+        $oPaquete->values = [
+            $oUnidadMedida,
+            $oEmpresas,
+            $oUnidad,
+            $oUser->EmpresaSeleccionada
+            ] ;
         return response()->json($oPaquete);
     }
 
@@ -82,7 +87,8 @@ class UnidadMedidaController extends Controller
             'Abreviatura' => 'nullable',
         ]);
 
-        $oUnidadMedida = UnidadMedida::where('Descripcion', $request->Descripcion)->get();
+        $oUnidadMedida = UnidadMedida::where('Descripcion', $request->Descripcion)
+        ->where('Empresa',$request->Empresa)->get();
         // validad si existe
         if (!$oUnidadMedida->isEmpty()) {
 
@@ -95,7 +101,7 @@ class UnidadMedidaController extends Controller
         }else{
             $oUnidadMedida = UnidadMedida::create([
                 'Empresa' => $request->Empresa,
-                'Codigo' => $request->Codigo,
+                'Codigo' => +$request->Codigo,
                 'Descripcion' => $request->Descripcion,
                 'Abreviatura' => $request->Abreviatura,
             ]);

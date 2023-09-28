@@ -21,5 +21,5 @@ class UnidadMedida extends Model
         'UsrFecha',
         'UsrHora'
     ];
-    // Si no deseas utilizar timestamps, agrega la siguiente línea:
+
 }
