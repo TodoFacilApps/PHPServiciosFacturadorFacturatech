@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Pais;
 use App\Models\Empresa;
+use App\Models\EmpresaSucursal;
 use App\Models\EmpresaUsuarioPersonal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +23,19 @@ class UsuarioEmpresaController extends Controller
         $credentials = $request->validate([
             'Usuario' => 'required',
             'Empresa' => 'required',
+            'CodigoSucursal' => 'nullable',
         ]);
 
+        // Verificar si CodigoSucursal está presente y no es nulo
+        if (isset($credentials['CodigoSucursal'])) {
+            // Si está presente, asignar el valor cero si es nulo
+            $credentials['CodigoSucursal'] = $credentials['CodigoSucursal'] ?? 0;
+        } else {
+            // Si no está presente, asignar el valor cero
+            $credentials['CodigoSucursal'] = 0;
+        }
         // Crear el nuevo usuario
-        $oUser = Usuario::find($credentials['Usuario']);
+        $oUser = User::find($credentials['Usuario']);
         if(is_null($oUser)){
             return response()->json([
                 'error' => 0,
@@ -38,6 +48,9 @@ class UsuarioEmpresaController extends Controller
         }
 
         $oEmpresa = Empresa::find($credentials['Empresa']);
+        $oSucursal = EmpresaSucursal::Where('Empresa',$credentials['Empresa'])
+        ->where('CodigoSucursal',$credentials['CodigoSucursal'])->first();
+
         if(is_null($oEmpresa)){
             return response()->json([
                 'error' => 0,

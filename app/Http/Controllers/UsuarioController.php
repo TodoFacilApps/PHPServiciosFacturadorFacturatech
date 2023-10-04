@@ -28,22 +28,22 @@ class UsuarioController extends Controller
     public function register(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|string|email|unique:USUARIO',
-            'password' => 'required|string|confirmed',//password_confirmation
-            'Correo' => 'required|email|unique:USUARIO',
-            'Nombre' => 'required',
-            'Apellido' => 'required',
-            'Telefono' => 'nullable|integer',
+            'tcEmail' => 'required|string|email|unique:USUARIO',
+            'tcPassword' => 'required|string|confirmed',//password_confirmation
+            'tcCorreoRespaldo' => 'nullable',
+            'tcNombre' => 'required',
+            'tcApellido' => 'required',
+            'tnTelefono' => 'nullable|integer',
         ]);
 
         // Crear el nuevo usuario
         $user = new User();
-        $user->email = $credentials['email'];
-        $user->password = Hash::make($credentials['password']);
-        $user->Correo = $credentials['Correo'];
-        $user->Nombre = $credentials['Nombre'];
-        $user->Apellido = $credentials['Apellido'];
-        $user->Telefono = $credentials['Telefono'];
+        $user->email = $credentials['tcEmail'];
+        $user->password = Hash::make($credentials['tcPassword']);
+        $user->CorreoRespaldo = $credentials['tcCorreoRespaldo'];
+        $user->Nombre = $credentials['tcNombre'];
+        $user->Apellido = $credentials['tcApellido'];
+        $user->Telefono = $credentials['tnTelefono'];
         $user->save();
 
         return response()->json([
@@ -52,6 +52,7 @@ class UsuarioController extends Controller
 
     }
 
+    //repetido del registrar
     public function signUp(Request $request)
     {
         $credentials = $request->validate([
@@ -92,11 +93,11 @@ class UsuarioController extends Controller
         ]);
         $credentials = request(['email', 'password']);
 
-        if (!Auth::attempt($credentials))
+        if (!Auth::attempt($credentials)){
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
-
+        }
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
 

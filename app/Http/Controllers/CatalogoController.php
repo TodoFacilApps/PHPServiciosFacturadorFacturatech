@@ -289,18 +289,9 @@ class CatalogoController extends Controller
     {
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
-        $oEmpresaSeleccionada;
+        $oEmpresaSeleccionada = Auth::user()->EmpresaSeleccionada;
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
-
-        $oInput = TokenServicio :: where('Empresa',$oEmpresas[0]->Empresa)->get()[0];
-
-        $oEmpresa =  Empresa::select('EMPRESA.*')
-        ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
-        ->leftJoin('USUARIO', 'EMPRESAUSUARIOPERSONAL.Usuario', '=', 'USUARIO.Usuario')
-        ->where('USUARIO.Usuario', '=', Auth::user()->Usuario)
-        ->orderBy('EMPRESA.Empresa', 'asc')
-        ->get();
 
         $oProducto = Producto::where('Empresa',$oEmpresas[0]->Empresa)->get();
         $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresas[0]->Empresa)->get();
@@ -309,7 +300,6 @@ class CatalogoController extends Controller
 
         //Parametros necesarios
         $oMoneda = Moneda::all();
-        $oImpuestoIva = ImpuestoIva::all();
         $oUnidadMedida = UnidadMedida::all();
 
         // validad si existe
@@ -317,7 +307,7 @@ class CatalogoController extends Controller
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "ejecucion exitosa ";
         $oPaquete->message = "comando ejecutado";
-        $oPaquete->values = [$oInput, $oProducto, $oUnidadMedida, $oMoneda, $oImpuestoIva, $oEmpresa, $oSucursal];
+        $oPaquete->values = [$oEmpresaSeleccionada, $oProducto, $oUnidadMedida, $oMoneda, $oEmpresas, $oSucursal];
         return response()->json($oPaquete);
     }
 }

@@ -9,12 +9,14 @@ class Moneda extends Model
 {
     use HasFactory;
 
-    protected $table = 'MONEDA';
+    protected $table = 'TIPOMONEDA';
     public $timestamps = false;
-    protected $primaryKey = 'Moneda';
+    protected $primaryKey = 'CodigoClasificador';
 
     protected $fillable = [
-        'Nombre',
+        'Descripcion',
+        'Sigla',
+        'Simbolo',
     ];
 
 }

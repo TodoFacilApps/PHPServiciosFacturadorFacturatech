@@ -48,13 +48,32 @@ class HomeController extends Controller
 
         $fechaActual = $fechaActual->format('Y-m-d');
         $fechaTresMesesAntes = $fechaTresMesesAntes->format('Y-m-d');
-
         //(pastel)ventas por sucursal
-        $loVentaSucursal = Venta::select('EMPRESASUCURSAL.Direccion as Sucursal' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
+        /*
+        $loVentaSucursal = Venta::select('VENTA.Fecha', DB::raw('COUNT(VENTA.Venta) as Cantidad'))
+        ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
+        ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
+        ->whereBetween('VENTA.Fecha', [$fechaTresMesesAntes, $fechaActual])
+        ->whereIn('VENTA.Venta', function ($query) {
+            $query->select('Venta')
+                ->from('VENTAFACTURA')
+                ->where('EstadoSiat', 1);
+        })
+        ->groupBy('VENTA.Fecha')
+        ->get();
+        */
+
+        $loVentaSucursal = DB::table('VENTA')
+            ->select('VENTA.Fecha', DB::raw('COUNT(VENTA.Venta) as Cantidad'))
             ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
-            ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
-            ->whereBetween('VENTA.Fecha', [$fechaTresMesesAntes, $fechaActual])
-            ->groupBy('EMPRESASUCURSAL.Direccion')
+            ->where('VENTA.Empresa', 1)
+            ->whereBetween('VENTA.Fecha', ['2023-09-01 00:00:00', '2023-10-02 00:00:00'])
+            ->whereIn('VENTA.Venta', function ($query) {
+                $query->select('Venta')
+                    ->from('VENTAFACTURA')
+                    ->where('EstadoSiat', 1);
+            })
+            ->groupBy('VENTA.Fecha')
             ->get();
 
 
@@ -67,7 +86,8 @@ class HomeController extends Controller
 
         $anEstadosSiat = [1,2,3,4,5];
         foreach ($anEstadosSiat as $item) {
-            $consulta = Venta::select('VENTA.Fecha' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
+
+            $consulta = Venta::select('VENTA.Fecha' , \DB::raw('COUNT(VENTA.Venta) as Cantidad'))
             ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
             ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
 
@@ -99,7 +119,7 @@ class HomeController extends Controller
             }
         }
 
-        $loVentaConFactura = Venta::select('VENTA.Fecha' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
+        $loVentaConFactura = Venta::select('VENTA.Fecha' , \DB::raw('COUNT(VENTA.Venta) as Cantidad'))
             ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
             ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
             ->whereBetween('VENTA.Fecha', [$ldPrimeroMes, $fechaActual])
@@ -109,7 +129,7 @@ class HomeController extends Controller
             ->groupBy('VENTA.Fecha')
             ->get();
 
-        $loVentaSinFactura = Venta::select('VENTA.Fecha' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
+        $loVentaSinFactura = Venta::select('VENTA.Fecha' , \DB::raw('COUNT(VENTA.Venta) as Cantidad'))
             ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
             ->whereBetween('VENTA.Fecha', [$ldPrimeroMes, $fechaActual])
             ->whereNotIn('VENTA.Venta', function($query) {
@@ -172,12 +192,27 @@ class HomeController extends Controller
             $fechaTresMesesAntes = $fechaTresMesesAntes->format('Y-m-d');
 
             //(pastel)ventas por sucursal
+            /*
             $loVentaSucursal = Venta::select('EMPRESASUCURSAL.Direccion as Sucursal' , \DB::raw('COUNT("VENTA"."Venta") as "Cantidad"'))
                 ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
                 ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
                 ->whereBetween('VENTA.Fecha', [$fechaTresMesesAntes, $fechaActual])
                 ->groupBy('EMPRESASUCURSAL.Direccion')
                 ->get();
+
+                            SELECT `EMPRESASUCURSAL`.`Direccion` AS `Sucursal`, COUNT(`VENTA`.`Venta`) AS `Cantidad`
+                FROM `VENTA`
+                LEFT JOIN `EMPRESASUCURSAL` ON `EMPRESASUCURSAL`.`Sucursal` = `VENTA`.`Sucursal`
+                WHERE `VENTA`.`Empresa` = 1
+                  AND `VENTA`.`Fecha` BETWEEN '2023-07-02' AND '2023-10-02'
+                GROUP BY `EMPRESASUCURSAL`.`Direccion`;
+            */
+            $loVentaSucursal = Venta::select('EMPRESASUCURSAL.Direccion as Sucursal', DB::raw('COUNT(VENTA.Venta) as Cantidad'))
+            ->leftJoin('EMPRESASUCURSAL', 'EMPRESASUCURSAL.Sucursal', '=', 'VENTA.Sucursal')
+            ->where('VENTA.Empresa', $oEmpresas[0]->Empresa)
+            ->whereBetween('VENTA.Fecha', [$fechaTresMesesAntes, $fechaActual])
+            ->groupBy('EMPRESASUCURSAL.Direccion')
+            ->get();
 
 
             // Obtener datos de evolucion de las ventas Totales
