@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UnidadMedida;
+use App\Models\UnidadMedidaEmpresa;
 use Illuminate\Http\Request;
 use App\Modelos\mPaquetePagoFacil;
 
@@ -28,22 +29,22 @@ class UnidadMedidaController extends Controller
         //
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
 
-        $oUnidadMedida = UnidadMedida::all();
+        $oUnidad = UnidadMedida::all();
         $oUser = auth()->user();
-        $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
-        ->join('EMPRESA as e', 'e.Empresa', '=', 'um.Empresa')
+        $oUnidadMedidaEmpresa = DB::table('UNIDADMEDIDA as um')
+        ->join('UNIDADMEDIDAEMPRESA as ume', 'ume.Codigo', '=', 'um.Codigo')
+        ->join('EMPRESA as e', 'e.Empresa', '=', 'ume.Empresa')
         ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
         ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
         ->where('u.Usuario', $oUser->Usuario)
-        ->select('um.*')
+        ->select('um.*', 'ume.Empresa')
         ->get();
 
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
-        $sincSiatController = new SincronizacionSiatController();
-        $oUnidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,18);
-        if($oUnidad){
-            $oUnidad =$oUnidad->original->RespuestaListaParametricas->listaCodigos;
+        $lnEmpresaSeleccionada = $oUser->EmpresaSeleccionada;
+        if($lnEmpresaSeleccionada===0){
+            $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
         }
 
         $oPaquete->error = 0; // Error Generico
@@ -51,10 +52,10 @@ class UnidadMedidaController extends Controller
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
         $oPaquete->values = [
-            $oUnidadMedida,
+            $oUnidadMedidaEmpresa,
             $oEmpresas,
             $oUnidad,
-            $oUser->EmpresaSeleccionada
+            $lnEmpresaSeleccionada
             ] ;
         return response()->json($oPaquete);
     }
@@ -82,15 +83,15 @@ class UnidadMedidaController extends Controller
 
         $request->validate([
             'Empresa' => 'required',
-            'CodigoUnidadMedida' => 'nullable',
+            'Codigo' => 'required',
             'Descripcion' => 'nullable',
             'Abreviatura' => 'nullable',
         ]);
 
-        $oUnidadMedida = UnidadMedida::where('Descripcion', $request->Descripcion)
+        $oUnidadMedidaEmpresa = UnidadMedidaEmpresa::where('Codigo', $request->Codigo)
         ->where('Empresa',$request->Empresa)->get();
         // validad si existe
-        if (!$oUnidadMedida->isEmpty()) {
+        if (!$oUnidadMedidaEmpresa->isEmpty()) {
 
             $oPaquete->error = 1; // Error Generico
                 $oPaquete->status = 0; // Sucedio un error
@@ -99,20 +100,20 @@ class UnidadMedidaController extends Controller
                 $oPaquete->values = null;
                 return response()->json($oPaquete);
         }else{
-            $oUnidadMedida = UnidadMedida::create([
+            $oUnidadMedidaEmpresa = UnidadMedidaEmpresa::create([
                 'Empresa' => $request->Empresa,
                 'Codigo' => +$request->Codigo,
-                'Descripcion' => $request->Descripcion,
-                'Abreviatura' => $request->Abreviatura,
+                'Estado' => 1,
             ]);
 
             $oUser = auth()->user();
             $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
-            ->join('EMPRESA as e', 'e.Empresa', '=', 'um.Empresa')
+            ->join('UNIDADMEDIDAEMPRESA as ume', 'ume.Codigo', '=', 'um.Codigo')
+            ->join('EMPRESA as e', 'e.Empresa', '=', 'ume.Empresa')
             ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
             ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
             ->where('u.Usuario', $oUser->Usuario)
-            ->select('um.*')
+            ->select('um.*','ume.Empresa')
             ->get();
 
 

@@ -464,7 +464,12 @@ class ProductoController extends Controller
                             break;
                     }
                 }
-                $oUnidadMedida = UnidadMedida::where('Empresa',$lnEmpresa)->get();
+                $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
+                ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
+                ->where('ume.Empresa', $lnEmpresa)
+                ->select('um.*')
+                ->get();
+
             }else{
                 echo('no hay empresas');
             }

@@ -293,8 +293,12 @@ class CatalogoController extends Controller
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
 
-        $oProducto = Producto::where('Empresa',$oEmpresas[0]->Empresa)->get();
-        $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresas[0]->Empresa)->get();
+        if($oEmpresaSeleccionada ===0){
+            $oEmpresaSeleccionada = $oEmpresas[0]->Empresa;
+        }
+
+        $oProducto = Producto::where('Empresa',$oEmpresaSeleccionada)->get();
+        $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresaSeleccionada)->get();
 
         $tnActividad = [1,18];
 
