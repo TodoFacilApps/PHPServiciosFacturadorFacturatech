@@ -52,38 +52,6 @@ class UsuarioController extends Controller
 
     }
 
-    //repetido del registrar
-    public function signUp(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|string|email|unique:USER',
-            'password' => 'required|string|confirmed',
-            'Correo' => 'required|email|unique:USUARIO',
-            'Nombre' => 'required',
-            'Apellido' => 'required',
-            'Telefono' => 'nullable|integer',
-        ]);
-
-
-        // Crear el nuevo usuario
-        $user = new User();
-        $user->email = $credentials['email'];
-        $user->password = Hash::make($credentials['password']);
-        $user->Correo = $credentials['Correo'];
-        $user->Nombre = $credentials['Nombre'];
-        $user->Apellido = $credentials['Apellido'];
-        $user->Telefono = $credentials['Telefono'];
-        $user->save();
-
-        // Generar y devolver el token JWT para el usuario recién registrado
-
-        //$token = JWTAuth::fromUser($user);
-        return response()->json([
-            'user' => $user //,
-          //  'token' => $token
-        ], 201);
-    }
-
     public function login(Request $request)
     {
         $request->validate([

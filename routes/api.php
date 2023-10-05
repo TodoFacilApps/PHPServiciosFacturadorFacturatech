@@ -38,9 +38,7 @@ use App\Http\Controllers\EmpresaCategoriaProductoController;
 
 
 // Rutas públicas (no requieren autenticación)
-Route::post('signup', [UsuarioController::class, 'signup']);
-// Ruta para procesar el registro de usuario
-Route::post('/register', [UsuarioController::class, 'register']);
+Route::post('register', [UsuarioController::class, 'register']);
 Route::post('login', [UsuarioController::class, 'login']);
 Route::get('envioMensaje', [EmailController::class, 'prueva']);
 
