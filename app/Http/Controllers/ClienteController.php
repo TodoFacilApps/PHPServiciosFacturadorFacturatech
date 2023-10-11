@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 
 use App\Models\TipoCliente;
+use App\Models\TipoDocumentoIdentidad;
 use App\Models\Cliente;
 use App\Models\EmpresaUsuarioPersonal;
 use App\Models\TokenServicio;
@@ -48,26 +49,20 @@ class ClienteController extends Controller
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
 
-        $oClientes ;
-        if($oEmpresas){
-            $oClientes = Cliente::where('Empresa',$oEmpresas[0]->Empresa)->get();
+        $oUser = auth()->user();
+        $lnEmpresaSeleccionada = $oUser->EmpresaSeleccionada;
+        if(($lnEmpresaSeleccionada === 0)|| ($lnEmpresaSeleccionada ==='0')){
+            $lnEmpresaSeleccionada =$oEmpresas[0]->Empresa;
         }
 
-        $sincSiatController = new SincronizacionSiatController();
-        $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
-
-        $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
-        $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
-        return [
-                    'Tipo' => $oTipoDocumentoIdentidad->codigoClasificador,
-                    'Nombre' => $oTipoDocumentoIdentidad->descripcion,
-                ];
-            },
-            $oTipoDocumentoIdentidad);
-
-        $oDescuento = Descuento::where('Empresa',$oEmpresas[0]->Empresa)
+        $oClientes ;
+        if($oEmpresas){
+            $oClientes = Cliente::where('Empresa',$lnEmpresaSeleccionada)->get();
+        }
+        $oTipoDocumentoIdentidad = TipoDocumentoIdentidad::select('TipoDocumentoIdentidad as Tipo','Nombre')->get();
+                
+        $oDescuento = Descuento::where('Empresa',$lnEmpresaSeleccionada)
         ->where('Estado',1)->get();
-        $oUser = auth()->user();
         $oTipoCliente = DB::table('TIPOCLIENTE as tc')
         ->join('EMPRESA as e', 'e.Empresa', '=', 'tc.Empresa')
         ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
@@ -86,7 +81,7 @@ class ClienteController extends Controller
             $oClientes,
             $oTipoDocumentoIdentidad,
             $oTipoCliente,
-            $oUser->Usuario];
+            $lnEmpresaSeleccionada];
         return response()->json($oPaquete);
     }
 
@@ -345,17 +340,8 @@ class ClienteController extends Controller
         }
 
         $sincSiatController = new SincronizacionSiatController();
-        $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $oEmpresas[0]->Empresa,10);
-
-        $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
-        $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
-        return [
-                    'Tipo' => $oTipoDocumentoIdentidad->codigoClasificador,
-                    'Nombre' => $oTipoDocumentoIdentidad->descripcion,
-                ];
-            },
-            $oTipoDocumentoIdentidad);
-
+        $oTipoDocumentoIdentidad = TipoDocumentoIdentidad::select('TipoDocumentoIdentidad as Tipo','Nombre')->get();
+        
         $oUser = auth()->user();
         $oTipoCliente = DB::table('TIPOCLIENTE as tc')
         ->join('EMPRESA as e', 'e.Empresa', '=', 'tc.Empresa')
@@ -375,7 +361,7 @@ class ClienteController extends Controller
             $oCliente,
             $oTipoDocumentoIdentidad,
             $oTipoCliente,
-            $oUser->Usuario];
+            $oCliente->Empresa];
         return response()->json($oPaquete);
     }
 }

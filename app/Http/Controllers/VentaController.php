@@ -23,11 +23,13 @@ use App\Models\TokenServicio;
 use App\Models\claseSiat;
 use App\Models\Movimineto;
 use App\Models\UnidadMedida;
+use App\Models\UnidadMedidaEmpresa;
 use App\Models\TipoCliente;
 use Carbon\Carbon;
 use App\Http\Controllers\SincronizacionSiatController;
 use App\Http\Controllers\UsuarioEmpresaController;
 use App\Http\Controllers\ConsultaController;
+use App\Models\TipoDocumentoIdentidad;
 
 class VentaController extends Controller
 {
@@ -185,13 +187,19 @@ class VentaController extends Controller
             $oEmpresas = $empresasController->misEmpresasReturn();
             $oUser = auth()->user();
             $lnEmpresaSeleccionada =$oUser->EmpresaSeleccionada;
-            if($lnEmpresaSeleccionada === 0){
+            if(($lnEmpresaSeleccionada === 0)||($lnEmpresaSeleccionada === '0')){
                 $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
             }
-            $sincSiatController = new SincronizacionSiatController();
-            $oUnidad = UnidadMedida::where('Empresa',$lnEmpresaSeleccionada)
-            ->get();
 
+            $oUnidad = DB::table('UNIDADMEDIDA as um')
+            ->join('UNIDADMEDIDAEMPRESA as ume', 'ume.Codigo', '=', 'um.Codigo')
+            ->join('EMPRESA as e', 'e.Empresa', '=', 'ume.Empresa')
+            ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+            ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+            ->where('u.Usuario', $oUser->Usuario)
+            ->select('um.*', 'ume.Empresa')
+            ->get();
+            
             $oProducto = Producto::where('Empresa',$lnEmpresaSeleccionada)
             ->where('Estado',1)->get();
 
@@ -201,15 +209,8 @@ class VentaController extends Controller
             $consultaController = new ConsultaController();
             $oTipoDocumentoSector = $consultaController->empresaTipoDocumentoSector( $lnEmpresaSeleccionada);
 
-            $oTipoDocumentoIdentidad = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,10);
-            $oTipoDocumentoIdentidad = $oTipoDocumentoIdentidad->original->RespuestaListaParametricas->listaCodigos;
-            $oTipoDocumentoIdentidad = array_map(function ($oTipoDocumentoIdentidad) {
-            return [
-                        'Tipo' => $oTipoDocumentoIdentidad->codigoClasificador,
-                        'Nombre' => $oTipoDocumentoIdentidad->descripcion,
-                    ];
-                },
-                $oTipoDocumentoIdentidad);
+            $oTipoDocumentoIdentidad = TipoDocumentoIdentidad::select('TipoDocumentoIdentidad as Tipo', 'Nombre')
+            ->get();
 
             $oDescuento = Descuento::where('Empresa',$lnEmpresaSeleccionada)
             ->where('Estado',1)->get();
@@ -391,7 +392,6 @@ class VentaController extends Controller
             if($empresasController->esMiEmpresa($request->tnEmpresa)){
                 $oVenta;
                 if($request->tnSucursal == 0){
-
                     $oVenta = DB::table('VENTA as v')
                     ->select('v.*', 'em.Nombre as Empresa', 'es.Direccion as Sucursal','p.CodigoSucursal as PuntoVenta','c.RazonSocial as Cliente')
                     ->join('PUNTOVENTA as p', 'v.PuntoVenta', '=', 'p.PuntoVenta')

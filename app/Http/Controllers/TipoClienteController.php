@@ -31,15 +31,19 @@ class TipoClienteController extends Controller
         ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
         ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
         ->where('u.Usuario', $oUser->Usuario)
-        ->select('tc.*')
-        ->get();
+        ->select('tc.*')->get();
 
-
+        $oEmpresaSeleccionada = $oUser->EmpresaSeleccionada;
+        
+        if(($oEmpresaSeleccionada ===0) || ($oEmpresaSeleccionada =='0')){
+            $oEmpresaSeleccionada = $oEmpresas[0]->Empresa;
+        }
+        
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "comando ejecutado";
         $oPaquete->message = "ejecusion sin inconvenientes";
-        $oPaquete->values = [$oTipoCliente, $oEmpresas, $oUser->EmpresaSeleccionada] ;
+        $oPaquete->values = [$oTipoCliente, $oEmpresas, $oEmpresaSeleccionada ] ;
         return response()->json($oPaquete);
     }
 

@@ -28,14 +28,35 @@ class UsuarioController extends Controller
     public function register(Request $request)
     {
         $credentials = $request->validate([
-            'tcEmail' => 'required|string|email|unique:USUARIO',
-            'tcPassword' => 'required|string|confirmed',//password_confirmation
+            'tcEmail' => 'required',
+            'tcPassword' => 'required',//password_confirmation
             'tcCorreoRespaldo' => 'nullable',
             'tcNombre' => 'required',
             'tcApellido' => 'required',
-            'tnTelefono' => 'nullable|integer',
+            'tnTelefono' => 'nullable',
         ]);
-
+        
+        if ($request->tcPassword !== $request->tcPassword_confirmation ) {
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> "La contraseña de confirmacion no coincide",
+                'values'=>null
+            ]);
+            
+        }
+        
+        
+        if (User::where('email', $request->tcEmail)->exists()) {
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> "Usuario Registrado Anteriormente",
+                'values'=>null
+            ]);
+            
+        }
+        
         // Crear el nuevo usuario
         $user = new User();
         $user->email = $credentials['tcEmail'];
@@ -54,38 +75,66 @@ class UsuarioController extends Controller
 
     public function login(Request $request)
     {
+        $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
+        
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-        $credentials = request(['email', 'password']);
-
-        if (!Auth::attempt($credentials)){
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+        try {
+            $credentials = request(['email', 'password']);
+            
+            if (!Auth::attempt($credentials)){
+                $oUser = User::where('email', $request->email)->first();
+                if($oUser){
+                    $oPaquete->error = 1; // Error Generico
+                    $oPaquete->status = 0; // Sucedio un error
+                    $oPaquete->messageSistema = "Error AUTHENTICACION NO VALIDA";
+                    $oPaquete->message = "Clave de Seguridad Invalida";
+                    $oPaquete->values = null;
+                }else{
+                    $oPaquete->error = 1; // Error Generico
+                    $oPaquete->status = 0; // Sucedio un error
+                    $oPaquete->messageSistema = "Error AUTHENTICACION NO VALIDA";
+                    $oPaquete->message = "Correo No Encontrado";
+                    $oPaquete->values = null;
+                }
+                return response()->json($oPaquete,401);
+                
+            }
+            $user = $request->user();
+            $tokenResult = $user->createToken('Personal Access Token');
+            
+            $token = $tokenResult->token;
+            if ($request->remember_me){
+                $token->expires_at = Carbon::now()->addWeeks(1);
+            }
+            
+            $token->save();
+            $user->save();
+            
+            
+            $oPaquete->error = 0; 
+            $oPaquete->status = 1; 
+            $oPaquete->messageSistema = "Comando ejecutado";
+            $oPaquete->message = "Usuario obtenido";
+            $oPaquete->values = [$tokenResult->accessToken];
+            return response()->json($oPaquete);
+            
+            
+        } catch (JWTException $e) {
+            error::guardar("Error generacion de token )", $e);
+            
+            
+            $oPaquete->error = 1; // Error Generico
+            $oPaquete->status = 0; // Sucedio un error
+            $oPaquete->messageSistema = "Error AUTHENTICACION NO VALIDA";
+            $oPaquete->message = "a ocurrido un error  ";
+            $oPaquete->values = null;
+            return response()->json($oPaquete);
         }
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-
-        $token = $tokenResult->token;
-        if ($request->remember_me){
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-
-        $token->save();
-        $user->save();
-
-
-        return response()->json([
-            'error' => 0,
-            'status' => 1,
-            'message'=> "Usuario obtenido",
-            'messageMostrar'=> 'se obtubo el usuario',
-            'messageSistema'=> 'se obtubo el usuario',
-            'values'=> [$tokenResult->accessToken]
-        ]);
+        
     }
 
     public function selecionarEmpresa(Request $request)
@@ -161,19 +210,22 @@ class UsuarioController extends Controller
         ]);
     }
 
-    /**
-     * Obtener el objeto User como json
-     */
     public function user(Request $request)
     {
         $oUser = $request->user();
-        $oEmpresa = Empresa::find($oUser->EmpresaSeleccionada);
+        if($oUser->EmpresaSeleccionada !== 0 ){
+            
+        }
+        $oEmpresa = Empresa::where('Empresa', $oUser->EmpresaSeleccionada)->first();
         $lcUrlLogo;
         if($oEmpresa){
             $lcUrlLogo = $oEmpresa->UrlLogo;
             $oUser->EmpresaSeleccionada = $oEmpresa->Nombre;
+            if($lcUrlLogo === ''){
+                $lcUrlLogo = 'favicon.ico';
+            }
         }else{
-            $lcUrlLogo =env('APP_URL').env('APP_PORT').'/imagenes/default/prodductoServicio.jpg';
+            $lcUrlLogo =env('APP_URL').env('APP_PORT').'/imagenes/default/multi-empresas.png';
             $oUser->EmpresaSeleccionada ='Multiempresa';
         }
         return response()->json([

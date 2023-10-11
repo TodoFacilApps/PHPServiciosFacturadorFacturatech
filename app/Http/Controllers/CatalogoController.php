@@ -292,15 +292,12 @@ class CatalogoController extends Controller
         $oEmpresaSeleccionada = Auth::user()->EmpresaSeleccionada;
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
-
-        if($oEmpresaSeleccionada ===0){
+        if(($oEmpresaSeleccionada === '0')||($oEmpresaSeleccionada === 0)){
             $oEmpresaSeleccionada = $oEmpresas[0]->Empresa;
         }
-
+        
         $oProducto = Producto::where('Empresa',$oEmpresaSeleccionada)->get();
         $oSucursal = EmpresaSucursal::where('Empresa',$oEmpresaSeleccionada)->get();
-
-        $tnActividad = [1,18];
 
         //Parametros necesarios
         $oMoneda = Moneda::all();
@@ -310,8 +307,14 @@ class CatalogoController extends Controller
         $oPaquete->error = 0; // Error Generico
         $oPaquete->status = 1; // Sucedio un error
         $oPaquete->messageSistema = "ejecucion exitosa ";
-        $oPaquete->message = "comando ejecutado";
-        $oPaquete->values = [$oEmpresaSeleccionada, $oProducto, $oUnidadMedida, $oMoneda, $oEmpresas, $oSucursal];
+        $oPaquete->message = "comando ejecutado"; 
+        $oPaquete->values = [
+            $oEmpresaSeleccionada, 
+            $oProducto, //productos de la empresa seleccionada
+            $oUnidadMedida, //todas las unidades de medida
+            $oMoneda, 
+            $oEmpresas, //mis empresas
+            $oSucursal]; //sucursales de la empresa
         return response()->json($oPaquete);
     }
 }

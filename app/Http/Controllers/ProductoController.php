@@ -444,21 +444,23 @@ class ProductoController extends Controller
 
             $empresasController = new UsuarioEmpresaController();
             $oEmpresas = $empresasController->misEmpresasReturn();
+            $lnEmpresaSeleccionada = auth()->user()->EmpresaSeleccionada;
 
             $oActividadEconomica;
             $oUnidadMedida;
             $oCatalogoIm;
             if(!$oEmpresas->isEmpty()){
                 $tnActividades = [1,6];
-                $lnEmpresa = $oEmpresas[0]->Empresa;
+                if(($lnEmpresaSeleccionada ===0 )|| ($lnEmpresaSeleccionada ==='0')){
+                    $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
+                }
                 foreach ($tnActividades as $tnActividad) {
                     $sincSiatController = new SincronizacionSiatController();
-                    $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresa,$tnActividad);
-                    switch ($tnActividad) {
+                    $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,$tnActividad);
+                    switch ($tnActividad) { 
                         case 1:
                             $oActividadEconomica = $result->original;
                             break;
-
                         case 6:
                             $oCatalogoIm = $result->original;
                             break;
@@ -466,8 +468,11 @@ class ProductoController extends Controller
                 }
                 $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
                 ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
-                ->where('ume.Empresa', $lnEmpresa)
-                ->select('um.*')
+                ->join('EMPRESA as e', 'e.Empresa', '=', 'ume.Empresa')
+                ->join('EMPRESAUSUARIOPERSONAL as eup', 'eup.Empresa', '=', 'e.Empresa')
+                ->join('USUARIO as u', 'u.Usuario', '=', 'eup.Usuario')
+                ->where('u.Usuario', $oUser->Usuario)
+                ->select('um.*','ume.Empresa')
                 ->get();
 
             }else{
@@ -485,7 +490,8 @@ class ProductoController extends Controller
                 $oActividadEconomica,
                 $oCatalogoIm,
                 $oUnidadMedida,
-                $oEmpresaCategoriaProd
+                $oEmpresaCategoriaProd,
+                $lnEmpresaSeleccionada
                 ] ;
             return response()->json($oPaquete);
         }catch (\Exception $e) {

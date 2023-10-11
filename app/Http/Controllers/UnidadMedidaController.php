@@ -43,7 +43,7 @@ class UnidadMedidaController extends Controller
         $empresasController = new UsuarioEmpresaController();
         $oEmpresas = $empresasController->misEmpresasReturn();
         $lnEmpresaSeleccionada = $oUser->EmpresaSeleccionada;
-        if($lnEmpresaSeleccionada===0){
+        if(($lnEmpresaSeleccionada===0)||($lnEmpresaSeleccionada==='0')){
             $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
         }
 

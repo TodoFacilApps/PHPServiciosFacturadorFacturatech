@@ -208,13 +208,20 @@ class UsuarioEmpresaController extends Controller
                 'values'=> null,
             ]);
         }
-
-        $empresas = Empresa::select('EMPRESA.*')
+        $empresas;
+        $lnEmpresaSeleccionada =$oUser->EmpresaSeleccionada;
+        if(($lnEmpresaSeleccionada === 0)||($lnEmpresaSeleccionada === '0')){
+            $empresas = Empresa::select('EMPRESA.*')
             ->leftJoin('EMPRESAUSUARIOPERSONAL', 'EMPRESAUSUARIOPERSONAL.Empresa', '=', 'EMPRESA.Empresa')
             ->leftJoin('USUARIO', 'EMPRESAUSUARIOPERSONAL.Usuario', '=', 'USUARIO.Usuario')
             ->where('USUARIO.Usuario', '=', $oUser->Usuario)
             ->orderBy('EMPRESA.Empresa', 'asc')
             ->get();
+        }else{
+            $empresas = Empresa::where('Empresa',$lnEmpresaSeleccionada)->get();
+            
+        }
+        
 
         return $empresas;
 
@@ -234,8 +241,15 @@ class UsuarioEmpresaController extends Controller
     }
 
     public function ver(){
-        $oEmpresas = $this->misEmpresasReturn();
-        return $this->show($oEmpresas[0]->Empresa);
+        $oUser = auth()->user();
+
+        $lnEmpresaSeleccionada = $oUser->EmpresaSeleccionada ;
+        if($lnEmpresaSeleccionada ===0){
+            $oEmpresas = $this->misEmpresasReturn();
+            $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
+        }
+        
+        return $this->show($lnEmpresaSeleccionada);
     }
 
 

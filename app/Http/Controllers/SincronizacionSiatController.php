@@ -48,9 +48,7 @@ class SincronizacionSiatController extends Controller
             $oPaquete->message = "empresa invalida para el usuario";
             $oPaquete->messageMostrar = "0";
             $oPaquete->values = 1;
-
         } else {
-
             $result = $this->SincronizacionSiatReturn($request->tnEmpresa, $request->tnTipo);
 
             $oPaquete->error = 0; // Indicar que hubo un error
@@ -58,7 +56,7 @@ class SincronizacionSiatController extends Controller
             $oPaquete->messageSistema = "comando ejecutado";
             $oPaquete->message = "ejecucion sin inconvenientes";
             $oPaquete->messageMostrar = "0";
-            $oPaquete->values = $result ;
+            $oPaquete->values = $result;
 
             return response()->json($oPaquete);
         }
@@ -144,7 +142,7 @@ class SincronizacionSiatController extends Controller
             return response()->json($oPaquete, 500); // Devolver una respuesta con código 500
         }
         return $oUser;
-    }
+    }   
 
     public function reconnect(){
 
