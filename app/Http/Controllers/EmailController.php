@@ -8,39 +8,90 @@ use Illuminate\Http\Request;
 use App\Mail\DemoEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MiCorreo;
+use App\Mail\ContactoMailable;
 
 class EmailController extends Controller
 {
 
-
-    public function send()
+    public function __construct()
     {
-        $objDemo = new \stdClass();
-        $objDemo->demo_one = 'Demo One Value';
-        $objDemo->demo_two = 'Demo Two Value';
-        $objDemo->sender = 'SenderUserName';
-        $objDemo->receiver = 'ReceiverUserName';
-        Mail::to("receiver@example.com")->send(new DemoEmail($objDemo));
     }
 
-    public function contact(Request $request){
-        $subject = "Asunto del correo";
-        $for = "soraideaurora@gmail.com";
 
-        Mail::send('email',$request->all(), function($msj) use($subject,$for){
-            $msj->from("jakeli1997.jcs@gmail.com","Prueva de Facturador");
-            $msj->subject($subject);
-            $msj->to($for);
+    function index()
+    {
+     return view('form');
+    }
+
+    //envio de mensaje desde formulario
+    public function send(Request $request)
+    {
+      $this->validate($request, [
+          'name'     =>  'required',
+          'email'  =>  'required|email',
+          'message' =>  'required'
+         ]);
+
+       $data = array(
+            'name'      =>  $request->input('name'),
+            'message'   =>   $request->input('message')
+        );
+
+        $email = $request->input('email');
+      Mail::to($email)->send(new MiCorreo($data));
+      return back()->with('success', 'Enviado exitosamente!');
+    }
+
+
+    function mensaje(Request $request) {
+        $this->validate($request, [
+            'name'     =>  'required',
+            'email'  =>  'required|email',
+            'message' =>  'required'
+        ]);
+
+        $mensaje = "Saludos, " . $request->input('name') . "
+        Utilice este código para restablecer la contraseña de la cuenta de: " . $request->input('email') . "
+
+        Aquí está tu código: 1234123
+        Otra variable: " . $request->input('message');
+
+        $response = Mail::raw($mensaje, function ($message) use ($request) {
+            $message->to($request->input('email'))
+                    ->subject('Asunto del correo');
         });
-        return 'mensaje enviado ';
     }
 
-    public function prueva(){
-        $nombreUsuario = 'Juan'; // Nombre del usuario
-        $mensajePersonalizado = '¡Bienvenido a nuestro sitio web! Esperamos que disfrutes de tu experiencia.';
+    function mensajeStatico() {
+        $mensaje = "Saludos, Aurora
+        Utilice este código para restablecer la contraseña de la cuenta de: soraideaurora@gmail.com
 
-        $mail = new MiCorreo($nombreUsuario, $mensajePersonalizado);
-        Mail::to('leonardo.ayala@pagofacil.com.bo')->send($mail);
-//        return response()->json($mail);
+        Aquí está tu código: 1234123
+        Otra variable: variable adicional";
+        $response = Mail::raw($mensaje, function ($message) {
+            $message->to("soraideaurora@gmail.com")
+                    ->subject('Asunto del correo');
+        });
     }
+
+    protected function sendResetLinkResponse($response)
+    {
+        if (request()->header('Content-Type') == 'application/json') {
+            return response()->json(['success' => 'Recovery email sent.']);
+        }
+        return back()->with('status', trans($response));
+    }
+
+    protected function sendResetLinkFailedResponse(Request $request, $response)
+    {
+        if (request()->header('Content-Type') == 'application/json') {
+            return response()->json(['error' => 'Oops something went wrong.']);
+        }
+        return back()->withErrors(
+            ['email' => trans($response)]
+        );
+    }
+
+
+
 }

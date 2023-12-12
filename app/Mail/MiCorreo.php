@@ -3,26 +3,23 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MiCorreo extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $nombre; // Variable para el nombre del usuario
-    public $mensaje; // Variable para el mensaje personalizado
-
+    public $data;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($nombre, $mensaje)
+    public function __construct($data)
     {
-        $this->nombre = $nombre;
-        $this->mensaje = $mensaje;
+        $this->data = $data;
     }
 
     /**

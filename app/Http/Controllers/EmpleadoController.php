@@ -1,10 +1,10 @@
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-
-class EmpleadoController extends Controller
-{
-    //
-}
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class EmpleadoController extends Controller
+{
+    //
+}
