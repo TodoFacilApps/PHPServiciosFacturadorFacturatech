@@ -1,0 +1,274 @@
+ï»¿2023-12-18 17:44:42:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+DEVOLVIO CON EXITO : 
+
+Numero de Venta: 112
+
+null
+
+1
+
+
+
+
+ï»¿2023-12-18 17:44:42:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+VentaFactura
+
+10112
+
+Actualizada por 
+
+{
+    "Venta": 112,
+    "NumeroFactura": 10112,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-18",
+    "HoraEmision": "17:44:02",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "12413709016",
+    "DocumentoIdentidad": 5,
+    "NumeroDocumento": "12413709016",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Angelica Maria Condori Soraide",
+    "Email": "noreply@pagofacil.com.bo",
+    "MetodoPago": 2,
+    "NumeroTarjeta": "4561XXXXXXXX8978",
+    "Cufd": null,
+    "Cuf": "1096E9BFA908274DF863F4089DBBE26FD953B3F30E94E8EEA535F20E74",
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-18",
+    "HoraCreacion": "17:44:02",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": 3472375
+}
+
+
+
+
+ï»¿2023-12-18 17:44:42:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Resultados de consulta
+
+{
+    "error": 0,
+    "status": 1,
+    "message": "Se emitio correctamente ",
+    "messageMostrar": 0,
+    "messageSistema": "Exito  ",
+    "values": {
+        "CUF": "1096E9BFA908274DF863F4089DBBE26FD953B3F30E94E8EEA535F20E74",
+        "FacturaXML": "",
+        "FacturaPDF": "",
+        "Transaccion": true,
+        "Estado": true,
+        "TipoEmision": 1,
+        "FacturaNube": 3472375
+    }
+}
+
+
+
+
+ï»¿2023-12-18 17:44:04:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392ßßß35ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß23ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10112ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:44:02.832ßAngelica Maria Condori Soraideß5ß12413709016ßß12413709016ß2ß4561XXXXXXXX8978ß130ß130ß1ß1ß0ß0ß1ß1 Jakeline Condori Soraideß35ßnoreply@pagofacil.com.boþ
+
+Datos a Enviar del Detalle de la Factura
+
+1-1-1-006                     ¦620100¦99100ßINSTALACION DE SCANNER                                                                              ß1.00ß58ß80ß0ß80ßßþ1-1-2-016                     ¦620100¦99100ßREPARACION DE FAX EXTERNO                                                                           ß1.00ß58ß50ß0ß50ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-18 17:44:04:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10112ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:44:02.832ßAngelica Maria Condori Soraideß5ß12413709016ßß12413709016ß2ß4561XXXXXXXX8978ß130ß130ß1ß1ß0ß0ß1ß1 Jakeline Condori Soraideß35ßnoreply@pagofacil.com.boþ
+
+
+
+
+ï»¿2023-12-18 17:44:04:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Datos de Validacion de Nit 
+
+{
+    "headers": {},
+    "original": {
+        "mensajesList": {
+            "codigo": 986,
+            "descripcion": "NIT ACTIVO"
+        },
+        "transaccion": true
+    },
+    "exception": null
+}
+
+
+
+
+ï»¿2023-12-18 17:44:02:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+23
+
+
+
+
+ï»¿2023-12-18 17:44:02:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 131,
+    "Nombre": "FacturaTech Compra Venta Bonificaciones y Descuento Prueba Electronica",
+    "Empresa": 1,
+    "NitEmpresa": "3879294013",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2023-06-01",
+    "FechaVigencia": "2050-06-01",
+    "Certificacion": 14,
+    "CodigoSistema": "7737CD0957FA4C4446DE40F",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392",
+    "Login": "SOLUTION",
+    "Correos": "cesar.corvera@pagofacil.com.bo",
+    "Usr": 36,
+    "UsrHora": "19:20:47",
+    "UsrFecha": "2023-06-01",
+    "Serial": 1,
+    "TipoDocumentoSector": 35,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-18 17:44:02:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Datos del usuario
+
+{
+    "Usuario": 1,
+    "Nombre": "Jakeline",
+    "Apellido": "Condori Soraide",
+    "email": "jakeli1997.jcs@gmail.com",
+    "CorreoRespaldo": "jakeli1997.jcs@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": "106413027748378389781",
+    "EmpresaSeleccionada": 1,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 112,
+    "Empresa": 1,
+    "Sucursal": 1,
+    "PuntoVenta": 350,
+    "Fecha": "2023-12-18",
+    "Hora": "17:43:59",
+    "SubTotal": 130,
+    "TotalDesc": 0,
+    "TotalVenta": 130,
+    "GiftCard": 0,
+    "TotalPagar": 130,
+    "ImporteIva": 130,
+    "Moneda": 1,
+    "MetodoPago": 2,
+    "Nro4Init": 4561,
+    "Nro4Fin": 8978,
+    "Cliente": 5,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 112,
+    "NumeroFactura": 10112,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-18",
+    "HoraEmision": "17:44:02",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "12413709016",
+    "DocumentoIdentidad": 5,
+    "NumeroDocumento": "12413709016",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Angelica Maria Condori Soraide",
+    "Email": "noreply@pagofacil.com.bo",
+    "MetodoPago": 2,
+    "NumeroTarjeta": "4561XXXXXXXX8978",
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-18",
+    "HoraCreacion": "17:44:02",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-18 17:44:02:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.112 
+Venta a emitir 
+
+112
+
+
+

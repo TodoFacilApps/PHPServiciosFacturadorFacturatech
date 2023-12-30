@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmailController    ;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/form', function () {
+    return view('form');
+});
+// ruta al enviar correo
+Route::post('send', [EmailController::class, 'send']);
+
+Route::post('mensajeStatic',  [EmailController::class, 'mensaje']);
+Route::get('mensajeStatic',  [EmailController::class, 'mensajeStatico']);
+Route::post('/password/email', [EmailController::class, 'sendResetLinkEmail']);
+
+Route::get('mensajeAdjunto',  [EmailController::class, 'mensajeAdjunto']);

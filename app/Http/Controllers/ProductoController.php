@@ -303,32 +303,23 @@ class ProductoController extends Controller
                 
                 $oEmpresas = Empresa::find($lnEmpresaSeleccionada);
                 
-                $oActividadEconomica;
-                $oUnidadMedida;
-                $oCatalogoIm;
-                if($oEmpresas){
-                    $tnActividades = [1,6];
-                    foreach ($tnActividades as $tnActividad) {
-                        $sincSiatController = new SincronizacionSiatController();
-                        $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,$tnActividad);
-                        switch ($tnActividad) {
-                            case 1:
-                                $oActividadEconomica = $result->original;
-                                break;
-                            case 6:
-                                $oCatalogoIm = $result->original;
-                                break;
-                        }
-                    }
-                    $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
-                    ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
-                    ->where('ume.Empresa', $lnEmpresaSeleccionada)
-                    ->select('um.*','ume.Empresa')
-                    ->get();
-                    
-                }else{
-                    echo('no hay empresas');
-                }
+
+                $sql = "Select ae.*
+                    From ACTIVIDADECONOMICA as ae, EMPRESAACTIVIDADECONOMICA as eae
+                    Where ae.ActividadEconomica = eae.ActividadEconomica and eae.Empresa = ".$lnEmpresaSeleccionada.";";
+                
+                $oActividadEconomica = DB::select($sql);
+                
+                $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
+                ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
+                ->where('ume.Empresa', $lnEmpresaSeleccionada)
+                ->select('um.*','ume.Empresa')
+                ->get();
+                
+                $sincSiatController = new SincronizacionSiatController();
+                $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,6);
+                $oCatalogoIm = $result->original;
+                
                 
                 //llega asta aqui
                 $oPaquete->error = 0; //
@@ -506,36 +497,23 @@ class ProductoController extends Controller
             $oEmpresas = $empresasController->misEmpresasReturn();
             $lnEmpresaSeleccionada = auth()->user()->EmpresaSeleccionada;
 
-            $oActividadEconomica;
-            $oUnidadMedida;
-            $oCatalogoIm;
-            if(!$oEmpresas->isEmpty()){
-                $tnActividades = [1,6];
-                if(($lnEmpresaSeleccionada ===0 )|| ($lnEmpresaSeleccionada ==='0')){
-                    $lnEmpresaSeleccionada = $oEmpresas[0]->Empresa;
-                }
-                foreach ($tnActividades as $tnActividad) {
-                    $sincSiatController = new SincronizacionSiatController();
-                    $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,$tnActividad);
-                    switch ($tnActividad) {
-                        case 1:
-                            $oActividadEconomica = $result->original;
-                            break;
-                        case 6:
-                            $oCatalogoIm = $result->original;
-                            break;
-                    }
-                }
-                
-                $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
-                ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
-                ->where('ume.Empresa', $lnEmpresaSeleccionada)
-                ->select('um.*','ume.Empresa')
-                ->get();
+            $sql = "Select ae.* 
+                    From ACTIVIDADECONOMICA as ae, EMPRESAACTIVIDADECONOMICA as eae
+                    Where ae.ActividadEconomica = eae.ActividadEconomica and eae.Empresa = ".$lnEmpresaSeleccionada.";";
+            
+            $oActividadEconomica = DB::select($sql);
+            
+            $oUnidadMedida = DB::table('UNIDADMEDIDA as um')
+            ->join('UNIDADMEDIDAEMPRESA as ume', 'um.Codigo', '=', 'ume.Codigo')
+            ->where('ume.Empresa', $lnEmpresaSeleccionada)
+            ->select('um.*','ume.Empresa')
+            ->get();
+            
+            $sincSiatController = new SincronizacionSiatController();
+            $result = $sincSiatController->SincronizacionSiatReturn( $lnEmpresaSeleccionada,6);
+            $oCatalogoIm = $result->original;
+            
 
-            }else{
-                echo('no hay empresas');
-            }
             //llega asta aqui
             $oPaquete->error = 0; //
             $oPaquete->status = 1; //

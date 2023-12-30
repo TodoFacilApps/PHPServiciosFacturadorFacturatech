@@ -334,11 +334,30 @@ class VentaController extends Controller
             ->get();
             
             $oProducto = Producto::where('Empresa',$lnEmpresaSeleccionada)
-            ->where('Estado',1)->get();
+            ->where('Precio','!=',0)
+            ->where('Estado',1)
+            ->get();
 
             $oClientes = Cliente::where('Empresa',$lnEmpresaSeleccionada)
             ->get();
-
+            
+            $oUsuarioPersonalEmpresa = EmpresaUsuarioPersonal::where('Usuario', $oUser->Usuario)
+            ->where('Empresa',$lnEmpresaSeleccionada)->where('CodigoAmbiente',$oUser->CodigoAmbiente)->first();
+            
+            
+            $oTipoDocumentoSector = DB::table('TIPODOCUMENTOSECTOR as td')
+            ->join('ASOCIACIONTIPODOCUMENTOSECTOR as atds', 'atds.TipoDocumentoSector', '=', 'td.TipoDocumentoSector')
+            ->join('ASOCIACION as a', 'a.Asociacion', '=', 'atds.Asociacion')
+            ->join('PUNTOVENTA as pv', 'pv.CodigoSistema', '=', 'a.CodigoSistema')
+            ->where( 'pv.PuntoVenta', $oUsuarioPersonalEmpresa->PuntoVenta )
+            ->where( 'atds.Serial', 1)
+            ->where( 'a.Empresa', $lnEmpresaSeleccionada)
+            ->select('td.TipoDocumentoSector as Tipo','td.NOMBRE as Nombre', 'pv.PuntoVenta')
+            ->distinct()
+            ->get();
+            
+            
+            
             $consultaController = new ConsultaController();
             $oTipoDocumentoSector = $consultaController->empresaTipoDocumentoSector( $lnEmpresaSeleccionada);
 

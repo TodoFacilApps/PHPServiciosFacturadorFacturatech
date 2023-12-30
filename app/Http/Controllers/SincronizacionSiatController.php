@@ -461,8 +461,7 @@ class SincronizacionSiatController extends Controller
                         'Accept'        => 'application/json',
                         'Authorization' => 'Bearer ' . $oUserApiToken->TokenBearer // Reemplaza esto con tu token
                     ];
-                    $response = $client->post($url, ['headers' => $header,
-                        'json' => $data]);
+                    $response = $client->post($url, ['headers' => $header, 'json' => $data]);
                     $result = json_decode($response->getBody()->getContents());
                     //    $result=$result->values;
                     Error::guardarLog(true,"Emision_Empresa_.$tnEmpresa",  "Resultados Obtenidos"
@@ -503,7 +502,6 @@ class SincronizacionSiatController extends Controller
         return $oUser;
     }
 
-    
     public function EmisionEnLineaReturn($tnEmpresa, $tcEmpresa, $tcPuntoVenta, $tcFactura, $tcFacturaDetalle){
         $oPaquete = new mPaquetePagoFacil(0, 1, "Error inesperado.. inicio ", null);
         try{
@@ -577,9 +575,6 @@ class SincronizacionSiatController extends Controller
         }
         return $oUser;
     }
-    
-    
-    
     
     public function buscarFactura(Request $request){
         

@@ -1,0 +1,795 @@
+ï»¿2023-12-15 14:41:05:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Obtener CUFD  = Codigo Cufd  {\"error\":1,\"status\":0,\"message\":\"\",\"messageMostrar\":1,\"messageSistema\":\"Error:TRY\\\/CATCH]: API KEY NO VALIDO Linea: 110 File: \\\/home\\\/facturatechcom\\\/serviciosiat.facturatech.com.bo\\\/app\\\/Http\\\/Controllers\\\/ServiciosFacturacionController.php\",\"values\":null}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-15 14:40:56:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Obtener CUFD  = Codigo Cufd  {\"error\":1,\"status\":0,\"message\":\"\",\"messageMostrar\":1,\"messageSistema\":\"Error:TRY\\\/CATCH]: API KEY NO VALIDO Linea: 110 File: \\\/home\\\/facturatechcom\\\/serviciosiat.facturatech.com.bo\\\/app\\\/Http\\\/Controllers\\\/ServiciosFacturacionController.php\",\"values\":null}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39dßßß1ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß1ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:40:55.328ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+107¦561110¦63310ßPorcion Papa y Platanoß2.00ß47ß10ß0ß20ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:40:55.328ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Tipo de Documento identidad: 2
+
+Numero de Documento: 11385389
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+1
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 5,
+    "Nombre": "Pollo Campeon Prueba                                                  ",
+    "Empresa": 2,
+    "NitEmpresa": "269628024",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2022-08-08",
+    "FechaVigencia": "2023-06-30",
+    "Certificacion": 4,
+    "CodigoSistema": "720DE84A52C3AD36012640F ",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+    "Login": "CAMPEON                                           ",
+    "Correos": "campeon@campeon.com.bo                                                                                                                                                                                                                          ",
+    "Usr": 4,
+    "UsrHora": "15:51:58",
+    "UsrFecha": "2022-08-08",
+    "Serial": 1,
+    "TipoDocumentoSector": 1,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos del usuario
+
+{
+    "Usuario": 3,
+    "Nombre": "Leonardo",
+    "Apellido": "ayala",
+    "email": "laionerplus@gmail.com",
+    "CorreoRespaldo": "laionerplus@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": null,
+    "EmpresaSeleccionada": 2,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 103,
+    "Empresa": 2,
+    "Sucursal": 2,
+    "PuntoVenta": 5,
+    "Fecha": "2023-12-15",
+    "Hora": "14:37:16",
+    "SubTotal": 20,
+    "TotalDesc": 0,
+    "TotalVenta": 20,
+    "GiftCard": 0,
+    "TotalPagar": 20,
+    "ImporteIva": 20,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 8,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 103,
+    "NumeroFactura": 10103,
+    "NitEmison": "269628024",
+    "FechaEmision": "2023-12-15",
+    "HoraEmision": "14:37:17",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 1,
+    "TipoDocumentoSector": 1,
+    "CodigoCliente": "11385389",
+    "DocumentoIdentidad": 2,
+    "NumeroDocumento": "11385389",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "jose luis",
+    "Email": "leonardoayalacayo@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-15",
+    "HoraCreacion": "14:37:17",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-15 14:40:55:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Venta a emitir 
+
+103
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39dßßß1ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß1ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:40:46.577ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+107¦561110¦63310ßPorcion Papa y Platanoß2.00ß47ß10ß0ß20ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:40:46.577ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Tipo de Documento identidad: 2
+
+Numero de Documento: 11385389
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+1
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 5,
+    "Nombre": "Pollo Campeon Prueba                                                  ",
+    "Empresa": 2,
+    "NitEmpresa": "269628024",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2022-08-08",
+    "FechaVigencia": "2023-06-30",
+    "Certificacion": 4,
+    "CodigoSistema": "720DE84A52C3AD36012640F ",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+    "Login": "CAMPEON                                           ",
+    "Correos": "campeon@campeon.com.bo                                                                                                                                                                                                                          ",
+    "Usr": 4,
+    "UsrHora": "15:51:58",
+    "UsrFecha": "2022-08-08",
+    "Serial": 1,
+    "TipoDocumentoSector": 1,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos del usuario
+
+{
+    "Usuario": 3,
+    "Nombre": "Leonardo",
+    "Apellido": "ayala",
+    "email": "laionerplus@gmail.com",
+    "CorreoRespaldo": "laionerplus@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": null,
+    "EmpresaSeleccionada": 2,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 103,
+    "Empresa": 2,
+    "Sucursal": 2,
+    "PuntoVenta": 5,
+    "Fecha": "2023-12-15",
+    "Hora": "14:37:16",
+    "SubTotal": 20,
+    "TotalDesc": 0,
+    "TotalVenta": 20,
+    "GiftCard": 0,
+    "TotalPagar": 20,
+    "ImporteIva": 20,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 8,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 103,
+    "NumeroFactura": 10103,
+    "NitEmison": "269628024",
+    "FechaEmision": "2023-12-15",
+    "HoraEmision": "14:37:17",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 1,
+    "TipoDocumentoSector": 1,
+    "CodigoCliente": "11385389",
+    "DocumentoIdentidad": 2,
+    "NumeroDocumento": "11385389",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "jose luis",
+    "Email": "leonardoayalacayo@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-15",
+    "HoraCreacion": "14:37:17",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-15 14:40:46:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Venta a emitir 
+
+103
+
+
+
+
+ï»¿2023-12-15 14:39:22:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Obtener CUFD  = Codigo Cufd  {\"error\":1,\"status\":0,\"message\":\"\",\"messageMostrar\":1,\"messageSistema\":\"Error:TRY\\\/CATCH]: API KEY NO VALIDO Linea: 110 File: \\\/home\\\/facturatechcom\\\/serviciosiat.facturatech.com.bo\\\/app\\\/Http\\\/Controllers\\\/ServiciosFacturacionController.php\",\"values\":null}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39dßßß1ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß1ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:39:12.858ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+107¦561110¦63310ßPorcion Papa y Platanoß2.00ß47ß10ß0ß20ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:39:12.858ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Tipo de Documento identidad: 2
+
+Numero de Documento: 11385389
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+1
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 5,
+    "Nombre": "Pollo Campeon Prueba                                                  ",
+    "Empresa": 2,
+    "NitEmpresa": "269628024",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2022-08-08",
+    "FechaVigencia": "2023-06-30",
+    "Certificacion": 4,
+    "CodigoSistema": "720DE84A52C3AD36012640F ",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+    "Login": "CAMPEON                                           ",
+    "Correos": "campeon@campeon.com.bo                                                                                                                                                                                                                          ",
+    "Usr": 4,
+    "UsrHora": "15:51:58",
+    "UsrFecha": "2022-08-08",
+    "Serial": 1,
+    "TipoDocumentoSector": 1,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos del usuario
+
+{
+    "Usuario": 3,
+    "Nombre": "Leonardo",
+    "Apellido": "ayala",
+    "email": "laionerplus@gmail.com",
+    "CorreoRespaldo": "laionerplus@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": null,
+    "EmpresaSeleccionada": 2,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 103,
+    "Empresa": 2,
+    "Sucursal": 2,
+    "PuntoVenta": 5,
+    "Fecha": "2023-12-15",
+    "Hora": "14:37:16",
+    "SubTotal": 20,
+    "TotalDesc": 0,
+    "TotalVenta": 20,
+    "GiftCard": 0,
+    "TotalPagar": 20,
+    "ImporteIva": 20,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 8,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 103,
+    "NumeroFactura": 10103,
+    "NitEmison": "269628024",
+    "FechaEmision": "2023-12-15",
+    "HoraEmision": "14:37:17",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 1,
+    "TipoDocumentoSector": 1,
+    "CodigoCliente": "11385389",
+    "DocumentoIdentidad": 2,
+    "NumeroDocumento": "11385389",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "jose luis",
+    "Email": "leonardoayalacayo@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-15",
+    "HoraCreacion": "14:37:17",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-15 14:39:12:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Venta a emitir 
+
+103
+
+
+
+
+ï»¿2023-12-15 14:37:32:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Obtener CUFD  = Codigo Cufd  {\"error\":1,\"status\":0,\"message\":\"\",\"messageMostrar\":1,\"messageSistema\":\"Error:TRY\\\/CATCH]: API KEY NO VALIDO Linea: 110 File: \\\/home\\\/facturatechcom\\\/serviciosiat.facturatech.com.bo\\\/app\\\/Http\\\/Controllers\\\/ServiciosFacturacionController.php\",\"values\":null}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39dßßß1ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß1ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:37:19.272ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+107¦561110¦63310ßPorcion Papa y Platanoß2.00ß47ß10ß0ß20ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3342945ß10103ß0ßAVENIDA PROLONGACION BENI S/N BARRIO ILANDERIAß1ß2023-12-15ß14:37:19.272ßjose luisß2ß11385389ßß11385389ß1ßß20ß20ß1ß1ß0ß0ß0ß3 Leonardo ayalaß1ßleonardoayalacayo@gmail.comþ
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Tipo de Documento identidad: 2
+
+Numero de Documento: 11385389
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+1
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 5,
+    "Nombre": "Pollo Campeon Prueba                                                  ",
+    "Empresa": 2,
+    "NitEmpresa": "269628024",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2022-08-08",
+    "FechaVigencia": "2023-06-30",
+    "Certificacion": 4,
+    "CodigoSistema": "720DE84A52C3AD36012640F ",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+    "Login": "CAMPEON                                           ",
+    "Correos": "campeon@campeon.com.bo                                                                                                                                                                                                                          ",
+    "Usr": 4,
+    "UsrHora": "15:51:58",
+    "UsrFecha": "2022-08-08",
+    "Serial": 1,
+    "TipoDocumentoSector": 1,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Datos del usuario
+
+{
+    "Usuario": 3,
+    "Nombre": "Leonardo",
+    "Apellido": "ayala",
+    "email": "laionerplus@gmail.com",
+    "CorreoRespaldo": "laionerplus@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": null,
+    "EmpresaSeleccionada": 2,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 103,
+    "Empresa": 2,
+    "Sucursal": 2,
+    "PuntoVenta": 5,
+    "Fecha": "2023-12-15",
+    "Hora": "14:37:16",
+    "SubTotal": 20,
+    "TotalDesc": 0,
+    "TotalVenta": 20,
+    "GiftCard": 0,
+    "TotalPagar": 20,
+    "ImporteIva": 20,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 8,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 103,
+    "NumeroFactura": 10103,
+    "NitEmison": "269628024",
+    "FechaEmision": "2023-12-15",
+    "HoraEmision": "14:37:17",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 1,
+    "TipoDocumentoSector": 1,
+    "CodigoCliente": "11385389",
+    "DocumentoIdentidad": 2,
+    "NumeroDocumento": "11385389",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "jose luis",
+    "Email": "leonardoayalacayo@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-15",
+    "HoraCreacion": "14:37:17",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-15 14:37:19:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.103 
+Venta a emitir 
+
+103
+
+
+

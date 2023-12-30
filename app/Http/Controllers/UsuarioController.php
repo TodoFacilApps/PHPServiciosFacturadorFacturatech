@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\EmpresaUsuarioPersonal;
 use App\Models\PuntoVenta;
 use App\Models\Asociacion;
+use App\Models\Cufd;
 use App\Modelos\mPaquetePagoFacil;
 //use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
@@ -181,12 +182,22 @@ class UsuarioController extends Controller
                 if($oEmpresapersonal->Sucursal === $request->tnSucursal){
                     $sql .=  " PuntoVenta = ".$request->tnPuntoVenta." ";
                 }else{
-                    $oEmpresapersonal->Sucursal= $request->tnSucursal;
+                    $oEmpresapersonal->Sucursal = $request->tnSucursal;
                     
                     $oPuntoVenta = PuntoVenta::where('Sucursal',$request->tnSucursal)
                     ->where('CodigoAmbiente',$oUser->CodigoAmbiente)->first();
-                    
-                    $sql .=  " Sucursal = ".$request->tnSucursal." ,  PuntoVenta = ".$oPuntoVenta->PuntoVenta." ";                    
+                    if($oPuntoVenta){
+                        $sql .=  " Sucursal = ".$request->tnSucursal." ,  PuntoVenta = ".$oPuntoVenta->PuntoVenta." ";
+                    }else{
+                        return response()->json([
+                            'error' => 1,
+                            'status' => 1,
+                            'message'=> "a ocurrido un error",
+                            'messageMostrar'=> 'la sucursal no cuenta con un punto de venta habilitado para el Ambiente',
+                            'messageSistema'=> 'error de ejecucion',
+                            'values'=> null
+                        ]);
+                    }
                 }
                 $sql .= "WHERE Empresa = ".$request->tnEmpresa." and Usuario = ".$oEmpresapersonal->Usuario." and CodigoAmbiente = ".$oEmpresapersonal->CodigoAmbiente.";";
                     DB::select($sql);
@@ -296,6 +307,15 @@ class UsuarioController extends Controller
         $oPuntoVenta = PuntoVenta::where('Sucursal',$oEmpresaUsuarioPersonal->Sucursal)
         ->where('CodigoAmbiente', $oUser->CodigoAmbiente)->get();
         
+        
+        
+        $oCufd = Cufd::where('Sucursal',$oEmpresaUsuarioPersonal->Sucursal)
+        ->where('Empresa', $oEmpresaUsuarioPersonal->Empresa)
+        ->where('PuntoVenta', $oEmpresaUsuarioPersonal->Sucursal)
+        ->where('CodigoAmbiente', $oUser->CodigoAmbiente)
+        ->orderBy('FechaVigencia', 'desc')
+        ->first();
+                
         return response()->json([
             'error' => 0,
             'status' => 1,
@@ -308,7 +328,8 @@ class UsuarioController extends Controller
                 $oEmpresaUsuarioPersonal,
                 $oEmpresas,
                 $oSucursal,
-                $oPuntoVenta
+                $oPuntoVenta,
+                $oCufd
             ]
         ]);
 

@@ -241,7 +241,7 @@ class ClienteController extends Controller
             'tcRazonSocial'=> 'required',
             'tnTipoDocumento'=> 'required',
             'tcDocumento'=> 'required',
-            'tcComplemento'=> 'required',
+            'tcComplemento'=> 'nullable',
             'tcNitEspecial'=> 'nullable',
             'tcCodigoCliente'=> 'nullable',
             'tcEmail'=> 'nullable',

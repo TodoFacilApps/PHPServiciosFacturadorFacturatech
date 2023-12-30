@@ -1,0 +1,397 @@
+ï»¿2023-12-18 17:39:32:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Emitir Factura Siat  no se emitio en siat data siat {\"RespuestaServicioFacturacion\":{\"codigoDescripcion\":\"RECHAZADA\",\"codigoEstado\":\"902\",\"mensajesList\":[{\"codigo\":\"1013\",\"descripcion\":\"EL CALCULO DEL MONTO TOTAL ES ERRONEO Monto total esperado 33999.99 enviado 33799.99\"},{\"codigo\":\"1050\",\"descripcion\":\"MONTO GIFT CARD NO CORRESPONDE AL METODO DE PAGO Monto pago gift card enviado 200.00 no corresponde para el metodo pago 1\"}],\"transaccion\":\"false\"}}{\"Cuf\":\"1096E9BFA908274DF8018667F8B080A70EBBA3DAA464E8EEA535F20E74\",\"Estado\":1,\"CodigoError\":\"1050\"}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392ßßß35ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß23ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10111ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:39:16.191ßAurora Soraide Cruzß1ß4568834ßß4568834ß1ßß33799.99ß33799.99ß1ß1ß200ß0ß0ß1 Jakeline Condori Soraideß35ßsoraideaurora@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+1-2-2-004                     ¦620100¦83141ßACTUALIZACION DE LOS SISTEMAS                                                                       ß1.00ß58ß7000ß0ß7000ßßþ1-2-2-001                     ¦620100¦83141ßSOPORTE TECNICO DE SISTEMAS NORMAL                                                                  ß1.00ß58ß27000ß0.01ß26999.99ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10111ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:39:16.191ßAurora Soraide Cruzß1ß4568834ßß4568834ß1ßß33799.99ß33799.99ß1ß1ß200ß0ß0ß1 Jakeline Condori Soraideß35ßsoraideaurora@gmail.comþ
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Tipo de Documento identidad: 1
+
+Numero de Documento: 4568834
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+23
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 131,
+    "Nombre": "FacturaTech Compra Venta Bonificaciones y Descuento Prueba Electronica",
+    "Empresa": 1,
+    "NitEmpresa": "3879294013",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2023-06-01",
+    "FechaVigencia": "2050-06-01",
+    "Certificacion": 14,
+    "CodigoSistema": "7737CD0957FA4C4446DE40F",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392",
+    "Login": "SOLUTION",
+    "Correos": "cesar.corvera@pagofacil.com.bo",
+    "Usr": 36,
+    "UsrHora": "19:20:47",
+    "UsrFecha": "2023-06-01",
+    "Serial": 1,
+    "TipoDocumentoSector": 35,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos del usuario
+
+{
+    "Usuario": 1,
+    "Nombre": "Jakeline",
+    "Apellido": "Condori Soraide",
+    "email": "jakeli1997.jcs@gmail.com",
+    "CorreoRespaldo": "jakeli1997.jcs@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": "106413027748378389781",
+    "EmpresaSeleccionada": 1,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 111,
+    "Empresa": 1,
+    "Sucursal": 1,
+    "PuntoVenta": 350,
+    "Fecha": "2023-12-18",
+    "Hora": "17:38:26",
+    "SubTotal": 33999.9899999999979627318680286407470703125,
+    "TotalDesc": 0,
+    "TotalVenta": 33999.9899999999979627318680286407470703125,
+    "GiftCard": 200,
+    "TotalPagar": 33799.9899999999979627318680286407470703125,
+    "ImporteIva": 33799.9899999999979627318680286407470703125,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 3,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 111,
+    "NumeroFactura": 10111,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-18",
+    "HoraEmision": "17:38:27",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "4568834",
+    "DocumentoIdentidad": 1,
+    "NumeroDocumento": "4568834",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Aurora Soraide Cruz",
+    "Email": "soraideaurora@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 200,
+    "FechaCreacion": "2023-12-18",
+    "HoraCreacion": "17:38:27",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-18 17:39:16:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Venta a emitir 
+
+111
+
+
+
+
+ï»¿2023-12-18 17:38:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Resultados de consulta
+
+{
+    "error": 1,
+    "status": 1,
+    "message": " Error no pudo emitirse la factura   ",
+    "messageMostrar": 0,
+    "messageSistema": "Emitir Factura Siat  no se emitio en siat data siat {\"RespuestaServicioFacturacion\":{\"codigoDescripcion\":\"RECHAZADA\",\"codigoEstado\":\"902\",\"mensajesList\":[{\"codigo\":\"1013\",\"descripcion\":\"EL CALCULO DEL MONTO TOTAL ES ERRONEO Monto total esperado 33999.99 enviado 33799.99\"},{\"codigo\":\"1050\",\"descripcion\":\"MONTO GIFT CARD NO CORRESPONDE AL METODO DE PAGO Monto pago gift card enviado 200.00 no corresponde para el metodo pago 1\"}],\"transaccion\":\"false\"}}{\"Cuf\":\"1096E9BFA908274DF7EFAB5AB84CC828CE8B93DAA4B4E8EEA535F20E74\",\"Estado\":1,\"CodigoError\":\"1050\"}",
+    "values": null
+}
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392ßßß35ßþ
+
+Datos a Enviar del Punto de Venta
+
+0ß23ßþ
+
+Datos a Enviar de la Factura
+
+3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10111ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:38:28.059ßAurora Soraide Cruzß1ß4568834ßß4568834ß1ßß33799.99ß33799.99ß1ß1ß200ß0ß0ß1 Jakeline Condori Soraideß35ßsoraideaurora@gmail.comþ
+
+Datos a Enviar del Detalle de la Factura
+
+1-2-2-004                     ¦620100¦83141ßACTUALIZACION DE LOS SISTEMAS                                                                       ß1.00ß58ß7000ß0ß7000ßßþ1-2-2-001                     ¦620100¦83141ßSOPORTE TECNICO DE SISTEMAS NORMAL                                                                  ß1.00ß58ß27000ß0.01ß26999.99ßßþ
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos de la Factura a enviar: 3879294013ßCesar Corvera MurakamißSanta cruzß3509411ß10111ß0ßc. MadrejÃ³n # 264 Barrio Santa Rositaß23ß2023-12-18ß17:38:28.059ßAurora Soraide Cruzß1ß4568834ßß4568834ß1ßß33799.99ß33799.99ß1ß1ß200ß0ß0ß1 Jakeline Condori Soraideß35ßsoraideaurora@gmail.comþ
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Tipo de Documento identidad: 1
+
+Numero de Documento: 4568834
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+23
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 131,
+    "Nombre": "FacturaTech Compra Venta Bonificaciones y Descuento Prueba Electronica",
+    "Empresa": 1,
+    "NitEmpresa": "3879294013",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2023-06-01",
+    "FechaVigencia": "2050-06-01",
+    "Certificacion": 14,
+    "CodigoSistema": "7737CD0957FA4C4446DE40F",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392",
+    "Login": "SOLUTION",
+    "Correos": "cesar.corvera@pagofacil.com.bo",
+    "Usr": 36,
+    "UsrHora": "19:20:47",
+    "UsrFecha": "2023-06-01",
+    "Serial": 1,
+    "TipoDocumentoSector": 35,
+    "Habilitado": 1
+}
+
+
+
+
+ï»¿2023-12-18 17:38:28:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Datos del usuario
+
+{
+    "Usuario": 1,
+    "Nombre": "Jakeline",
+    "Apellido": "Condori Soraide",
+    "email": "jakeli1997.jcs@gmail.com",
+    "CorreoRespaldo": "jakeli1997.jcs@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": "106413027748378389781",
+    "EmpresaSeleccionada": 1,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 111,
+    "Empresa": 1,
+    "Sucursal": 1,
+    "PuntoVenta": 350,
+    "Fecha": "2023-12-18",
+    "Hora": "17:38:26",
+    "SubTotal": 33999.9899999999979627318680286407470703125,
+    "TotalDesc": 0,
+    "TotalVenta": 33999.9899999999979627318680286407470703125,
+    "GiftCard": 200,
+    "TotalPagar": 33799.9899999999979627318680286407470703125,
+    "ImporteIva": 33799.9899999999979627318680286407470703125,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 3,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 111,
+    "NumeroFactura": 10111,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-18",
+    "HoraEmision": "17:38:27",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "4568834",
+    "DocumentoIdentidad": 1,
+    "NumeroDocumento": "4568834",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Aurora Soraide Cruz",
+    "Email": "soraideaurora@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 200,
+    "FechaCreacion": "2023-12-18",
+    "HoraCreacion": "17:38:27",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+ï»¿2023-12-18 17:38:27:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.111 
+Venta a emitir 
+
+111
+
+
+

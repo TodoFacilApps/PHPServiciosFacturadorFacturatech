@@ -1,0 +1,264 @@
+Ôªø2023-12-23 12:58:34:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+DEVOLVIO CON EXITO : 
+
+Numero de Venta: 122
+
+null
+
+1
+
+
+
+
+Ôªø2023-12-23 12:58:33:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+VentaFactura
+
+10122
+
+Actualizada por 
+
+{
+    "Venta": 122,
+    "NumeroFactura": 10122,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-23",
+    "HoraEmision": "12:57:40",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "4568834",
+    "DocumentoIdentidad": 1,
+    "NumeroDocumento": "4568834",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Aurora Soraide Cruz",
+    "Email": "soraideaurora@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": "1096E9BFA908275D3A4ED8098CF253AB3F9974E732700E6261B7030E74",
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-23",
+    "HoraCreacion": "12:57:40",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": 3520957
+}
+
+
+
+
+Ôªø2023-12-23 12:58:33:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Resultados de consulta
+
+{
+    "error": 0,
+    "status": 1,
+    "message": "Se emitio correctamente ",
+    "messageMostrar": 0,
+    "messageSistema": "Exito  ",
+    "values": {
+        "CUF": "1096E9BFA908275D3A4ED8098CF253AB3F9974E732700E6261B7030E74",
+        "FacturaXML": "",
+        "FacturaPDF": "",
+        "Transaccion": true,
+        "Estado": true,
+        "TipoEmision": 1,
+        "FacturaNube": 3520957
+    }
+}
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Parametros Enviados Para la Emision MultiSector
+
+Datos a Enviar de la Empresa
+
+eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392ﬂﬂﬂ35ﬂ˛
+
+Datos a Enviar del Punto de Venta
+
+0ﬂ23ﬂ˛
+
+Datos a Enviar de la Factura
+
+3879294013ﬂCesar Corvera MurakamiﬂSanta cruzﬂ3509411ﬂ10122ﬂ0ﬂc. Madrej√≥n # 264 Barrio Santa Rositaﬂ23ﬂ2023-12-23ﬂ12:57:41.774ﬂAurora Soraide Cruzﬂ1ﬂ4568834ﬂﬂ4568834ﬂ1ﬂﬂ3200ﬂ3200ﬂ1ﬂ1ﬂ0ﬂ0ﬂ0ﬂ1 Jakeline Condori Soraideﬂ35ﬂsoraideaurora@gmail.com˛
+
+Datos a Enviar del Detalle de la Factura
+
+1¶620100¶83141ﬂSERVICIOS DE DISE—O Y DESARROLLO DE TI PARA APLICACIONESﬂ1.00ﬂ58ﬂ3200ﬂ0ﬂ3200ﬂﬂ˛
+
+Datos a Enviar de la Factura Sector
+
+
+
+Datos a Enviar del Detalle de la Factura Sector
+
+
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Datos de la Factura a enviar: 3879294013ﬂCesar Corvera MurakamiﬂSanta cruzﬂ3509411ﬂ10122ﬂ0ﬂc. Madrej√≥n # 264 Barrio Santa Rositaﬂ23ﬂ2023-12-23ﬂ12:57:41.774ﬂAurora Soraide Cruzﬂ1ﬂ4568834ﬂﬂ4568834ﬂ1ﬂﬂ3200ﬂ3200ﬂ1ﬂ1ﬂ0ﬂ0ﬂ0ﬂ1 Jakeline Condori Soraideﬂ35ﬂsoraideaurora@gmail.com˛
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Tipo de Documento identidad: 1
+
+Numero de Documento: 4568834
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Codigo Sucursal
+
+0
+
+Codigo CodigoPuntoVenta
+
+23
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Datos y credenciales de la empresa con las que se emitira la fafctura
+
+{
+    "Asociacion": 131,
+    "Nombre": "FacturaTech Compra Venta Bonificaciones y Descuento Prueba Electronica",
+    "Empresa": 1,
+    "NitEmpresa": "3879294013",
+    "Estado": 1,
+    "ModoCertificacion": 0,
+    "FechaAsociacion": "2023-06-01",
+    "FechaVigencia": "2050-06-01",
+    "Certificacion": 14,
+    "CodigoSistema": "7737CD0957FA4C4446DE40F",
+    "CodigoAmbiente": 2,
+    "TipoModalidad": 1,
+    "TipoServicio": 3,
+    "SolicitarCUFDPorDemon": 0,
+    "HoraSolicitudCUFDPorDemon": "01:00:00",
+    "AsociacionCredencial": "eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392",
+    "Login": "SOLUTION",
+    "Correos": "cesar.corvera@pagofacil.com.bo",
+    "Usr": 36,
+    "UsrHora": "19:20:47",
+    "UsrFecha": "2023-06-01",
+    "Serial": 1,
+    "TipoDocumentoSector": 35,
+    "Habilitado": 1
+}
+
+
+
+
+Ôªø2023-12-23 12:57:41:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Datos del usuario
+
+{
+    "Usuario": 1,
+    "Nombre": "Jakeline",
+    "Apellido": "Condori Soraide",
+    "email": "jakeli1997.jcs@gmail.com",
+    "CorreoRespaldo": "jakeli1997.jcs@gmail.com",
+    "email_verified_at": null,
+    "Telefono": 75069277,
+    "Perfil": "normal",
+    "Estilo": "normal",
+    "Usr": null,
+    "UsrFecha": null,
+    "UsrHora": null,
+    "Google": "106413027748378389781",
+    "EmpresaSeleccionada": 1,
+    "CodigoAmbiente": 2
+}
+
+Datos de la venta
+
+{
+    "Venta": 122,
+    "Empresa": 1,
+    "Sucursal": 1,
+    "PuntoVenta": 350,
+    "Fecha": "2023-12-23",
+    "Hora": "12:57:39",
+    "SubTotal": 3200,
+    "TotalDesc": 0,
+    "TotalVenta": 3200,
+    "GiftCard": 0,
+    "TotalPagar": 3200,
+    "ImporteIva": 3200,
+    "Moneda": 1,
+    "MetodoPago": 1,
+    "Nro4Init": null,
+    "Nro4Fin": null,
+    "Cliente": 3,
+    "TipoPago": 0,
+    "CodigoCredito": 0,
+    "CodigoPago": 0
+}
+
+Datos para la factura
+
+{
+    "Venta": 122,
+    "NumeroFactura": 10122,
+    "NitEmison": "3879294013",
+    "FechaEmision": "2023-12-23",
+    "HoraEmision": "12:57:40",
+    "ValidoSin": 1,
+    "Moneda": 1,
+    "CodigoSucursal": 0,
+    "CodigoPuntoVenta": 23,
+    "TipoDocumentoSector": 35,
+    "CodigoCliente": "4568834",
+    "DocumentoIdentidad": 1,
+    "NumeroDocumento": "4568834",
+    "Complemento": null,
+    "Codexcepci": 0,
+    "RazonSocial": "Aurora Soraide Cruz",
+    "Email": "soraideaurora@gmail.com",
+    "MetodoPago": 1,
+    "NumeroTarjeta": null,
+    "Cufd": null,
+    "Cuf": null,
+    "Cafc": null,
+    "Leyenda": null,
+    "Nota": null,
+    "GiftCard": 0,
+    "FechaCreacion": "2023-12-23",
+    "HoraCreacion": "12:57:40",
+    "EstadoSiat": 1,
+    "Observacion": null,
+    "TipoEmision": null,
+    "Evento": null,
+    "NitEspecial": null,
+    "FacturaNube": null
+}
+
+
+
+
+Ôªø2023-12-23 12:57:40:000000 :::::::::::::::::::::::::::::::::::::VentaFactura_.122 
+Venta a emitir 
+
+122
+
+
+

@@ -40,12 +40,18 @@ class ConsultaController extends Controller
     // public function empresaTipoDocumentoSector(Request $request)
     public function empresaTipoDocumentoSector($tnEmpresa)
     {
+        $oUser = Auth::user();
+        $oUsuarioPersonalEmpresa = EmpresaUsuarioPersonal::where('Usuario', $oUser->Usuario)
+        ->where('Empresa',$tnEmpresa)->where('CodigoAmbiente',$oUser->CodigoAmbiente)->first();
+
         $oTipoDocumentoSector = DB::table('TIPODOCUMENTOSECTOR as td')
         ->join('ASOCIACIONTIPODOCUMENTOSECTOR as atds', 'atds.TipoDocumentoSector', '=', 'td.TipoDocumentoSector')
         ->join('ASOCIACION as a', 'a.Asociacion', '=', 'atds.Asociacion')
+        ->join('PUNTOVENTA as pv', 'pv.CodigoSistema', '=', 'a.CodigoSistema')
+        ->where( 'pv.PuntoVenta', $oUsuarioPersonalEmpresa->PuntoVenta )
         ->where( 'atds.Serial', 1)
         ->where( 'a.Empresa', $tnEmpresa)
-            ->select('td.TipoDocumentoSector as Tipo','td.NOMBRE as Nombre')
+            ->select('td.TipoDocumentoSector as Tipo','td.NOMBRE as Nombre', 'pv.PuntoVenta')
             ->distinct()
             ->get();
 

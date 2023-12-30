@@ -21,7 +21,13 @@ use App\Soporte\Error;
 use App\Http\Controllers\SincronizacionSiatController; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-    
+use App\Mail\SMSAdjunto;
+use Illuminate\Support\Facades\Mail;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class VentaFacturaController extends Controller
 {
@@ -151,7 +157,6 @@ class VentaFacturaController extends Controller
                             $result = substr($texto, $inicio);
                             $pattern_activo = "/ACTIVO/";
                             $pattern_inactivo = "/INACTIVO/";
-                            
                             if (preg_match($pattern_inactivo, $result)) {
                                 $lcCodigoExcepcion = "0";
                             } else{
@@ -288,7 +293,8 @@ class VentaFacturaController extends Controller
                         //->where('Numero', $tnNumeroFactura )
                         ->where('Venta', $loVenta->Venta)
                         ->update(['Cuf' => $result->values->CUF,
-                            'FacturaNube' => $result->values->FacturaNube
+                            'FacturaNube' => $result->values->FacturaNube,
+                            'EstadoSiat' => 2
                         ]);
                         
                         $factura = VentaFactura::find($tnVentaFactura);
@@ -342,9 +348,7 @@ class VentaFacturaController extends Controller
             return response()->json($oPaquete, 500); // Devolver una respuesta con codigo 500
         }
     }
-            
-
-    
+                
     public function emitirSiatCompraVenta(Request $request){
         
         try{
@@ -1121,6 +1125,95 @@ class VentaFacturaController extends Controller
         
     }
     
+    public function envioFactura(Request $request){
+        
+        try {
+            $data = $request->FacturaDatos;
+            
+            $empresa = $data['empresa'];
+            $factura = $data['factura'];
+            $factura =$factura[0];
+            $empresa  =$empresa [0];
+            
+            $mensaje = [
+                'name' => $factura['NombreRazonSocial'],
+                'email' => $factura['EmailCliente'],
+                'subjet' => 'Envio de Facturas',
+                'content' => $empresa,
+                'archivoPDF' => $request->FacturaPDF,
+            ];
+            Mail::to($mensaje['email'])->send(new SMSAdjunto($mensaje));
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "la Factura se envio Correctamente",
+                'values'=>null
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> $e->getMessage(),
+                'values'=>null
+            ]);
+        }
+    }
+
+    public function crearPDF(Request $request){
+        try {
+            $data = $request->pdf;
+            $name = $request->name;
+            
+            
+            
+            $pdf = base64_decode($data);
+            
+            $url =  'pdf/temporal/' .$name. ".pdf";
+            Storage::disk('public')->put($url, $pdf);
+            
+            $url = env('APP_URL') . '/' . $url;
+            
+            return response()->json([
+                'error' => 0,
+                'status' => 1,
+                'message'=> "el PDF fue creado exitosamente",
+                'values'=>$url
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> $e->getMessage(),
+                'values'=>null
+            ]);
+        }
+        
+    }
+    
+    public function eliminarPDF(Request $request){
+        try {
+            $name = $request->name;
+            
+            $url =  'pdf/temporal/' .$name. ".pdf";
+            Storage::disk('public')->delete($url);
+            return response()->json([
+                    'error' => 1,
+                    'status' => 1,
+                    'message'=> "el PDF fue eliminado corectamente",
+                    'values'=>null
+                ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 1,
+                'status' => 0,
+                'message'=> $e->getMessage(),
+                'values'=>null
+            ]);
+        }
+        
+    }
     
     
 }
