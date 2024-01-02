@@ -44,6 +44,7 @@ Route::post('register', [UsuarioController::class, 'register']);
 Route::post('login', [UsuarioController::class, 'login']);
 Route::post('loginGogle', [UsuarioController::class, 'loginGogle']);
 Route::get('envioMensaje', [EmailController::class, 'prueva']);
+Route::get('parametroConfiguracion', [ConsultaController::class, 'parametroConfiguracion']);
 
 
 Route::post('enlace', [UsuarioController::class, 'enlace'])->name('enlace');
