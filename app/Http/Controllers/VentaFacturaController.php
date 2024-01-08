@@ -1165,10 +1165,7 @@ class VentaFacturaController extends Controller
             $data = $request->pdf;
             $name = $request->name;
             
-            
-            
             $pdf = base64_decode($data);
-            
             $url =  'pdf/temporal/' .$name. ".pdf";
             Storage::disk('public')->put($url, $pdf);
             
@@ -1186,10 +1183,10 @@ class VentaFacturaController extends Controller
                 'error' => 1,
                 'status' => 0,
                 'message'=> $e->getMessage(),
+                'mesajeSitema'=>'Error en el Proceso de Crear PDF',
                 'values'=>null
             ]);
         }
-        
     }
     
     public function eliminarPDF(Request $request){
